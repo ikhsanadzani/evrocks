@@ -40,7 +40,7 @@
 			},
 			{
 				title: "Exhibition",
-				url: "/Analytics",
+				url: "/post/exhibition",
 				icon: ChartBarIcon,
 			},
 			{
