@@ -41,12 +41,18 @@
 
 		<Sidebar.Menu>
 			{#each items as item (item.title)}
+			{@const is_active = is_menu_active(page.url.pathname, item.url)}
+
 				<Sidebar.MenuItem>
 					<Sidebar.MenuButton tooltipContent={item.title}>
-						{#if item.icon}
-							<item.icon />
-						{/if}
-						<span>{item.title}</span>
+						{#snippet child({ props })}
+							<a href={item.url} {...props}>
+								{#if item.icon}
+									<item.icon />
+								{/if}
+								<span>{item.title}</span>
+							</a>
+						{/snippet}
 					</Sidebar.MenuButton>
 				</Sidebar.MenuItem>
 			{/each}
