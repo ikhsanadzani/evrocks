@@ -39,12 +39,12 @@
 				icon: ListDetailsIcon,
 			},
 			{
-				title: "Lender",
+				title: "Exhibition",
 				url: "/Analytics",
 				icon: ChartBarIcon,
 			},
 			{
-				title: "Projects",
+				title: "Lender",
 				url: "#",
 				icon: FolderIcon,
 			},
