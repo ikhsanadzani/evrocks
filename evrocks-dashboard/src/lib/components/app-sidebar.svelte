@@ -29,13 +29,13 @@
 		},
 		navMain: [
 			{
-				title: "Archive",
+				title: "Dashboard",
 				url: "/",
 				icon: DashboardIcon,
 			},
 			{
-				title: "Exhibition",
-				url: "/lifecycle",
+				title: "archive",
+				url: "/post/archive",
 				icon: ListDetailsIcon,
 			},
 			{

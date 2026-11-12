@@ -4,8 +4,17 @@
 	import * as Sidebar from "#lib/components/ui/sidebar/index.js";
 	import { Button } from "#lib/components/ui/button/index.js";
 	import type { Icon } from "@tabler/icons-svelte";
+	import { page } from "$app/state";
 
 	let { items }: { items: { title: string; url: string; icon?: Icon }[] } = $props();
+
+	function is_menu_active(current_path:string, menu_url: string): boolean {
+		if (menu_url === '/') {
+			return current_path === '/';
+		}
+
+		return current_path.startsWith(menu_url);
+	}
 </script>
 
 <Sidebar.Group>
@@ -29,6 +38,7 @@
 				</Button>
 			</Sidebar.MenuItem>
 		</Sidebar.Menu>
+
 		<Sidebar.Menu>
 			{#each items as item (item.title)}
 				<Sidebar.MenuItem>
