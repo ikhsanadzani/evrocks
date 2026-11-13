@@ -16,9 +16,7 @@ export async function load({url}) {
             archive_service.getAll(50),
             api_service.exhibition.getAll(50),
             api_service.lender.getAll(50),
-            tab === 'archive' && view === 'edit' && edit_id
-                ? api_service.archive.get_by_id('edit_id')
-                : Promise.resolve({item: null, error: null})
+            tab === 'archive' && view === 'edit' && edit_id ? archive_service.get_by_id(edit_id) : Promise.resolve({ item: null, error: null })
         ]);
   
         return {
@@ -43,7 +41,7 @@ export async function load({url}) {
                 return fail(400, { error: 'ID dan judul arsip wajib diisi.' });
             }
 
-            const { error: update_error } = await api_service.archive.update(id, {
+            const { error: update_error } = await archive_service.update(id, {
                 title,
                 content,
                 status

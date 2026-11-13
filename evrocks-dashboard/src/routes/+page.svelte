@@ -17,7 +17,7 @@
 	import ExhibitionView from "./post/exhibition/+page.svelte";
 	import LenderView from "./post/lending/+page.svelte";
 
-	let { data } = $props();
+	let { data, form } = $props();
 	let active_tab = $derived(page.url.searchParams.get("tab") ?? "dashboard");
 	let active_view = $derived(page.url.searchParams.get("view") ?? "list");
 	
