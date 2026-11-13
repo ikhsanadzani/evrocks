@@ -151,4 +151,9 @@
     h1, h2, h3, h4, h5, h6 {
         font-family: var(--font-heading);
     }
+	@layer components { 
+        .badge-status {
+	    @apply inline-flex items-center px-4 py-1.5 text-base font-medium rounded-md bg-primary text-primary-foreground hover:bg-primary-hover transition-colors;
+        }
+    }
 }

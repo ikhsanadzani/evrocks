@@ -27,7 +27,7 @@
 
                 <div class="pt-3 border-t flex items-center justify-between text-xs">
                     <span class="text-muted-foreground">Slug: {item.slug}</span>
-                    <span class="px-2 py-0.5 rounded border bg-secondary">{item.status}</span>
+                    <span class="badge-status">{item.status}</span>
                 </div>
             </div>
         {:else}

@@ -27,9 +27,7 @@
                         <td class="p-3 font-medium">{@html item.title}</td>
                         <td class="p-3 text-muted-foreground">{item.slug}</td>
                         <td class="p-3">
-                            <span class="px-2 py-0.5 text-xs font-medium rounded-xs bg-primary text-primary-foreground hover:bg-primary-hover transition-colors">
-                                {item.status}
-                            </span>
+                            <span class="badge-status">{item.status}</span>
                         </td>
                         <td class="p-3 text-muted-foreground">
                             {new Date(item.date).toLocaleDateString('id-ID')}
