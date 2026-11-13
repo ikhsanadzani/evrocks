@@ -45,7 +45,7 @@
                 title: "Archive",
                 url: "/?tab=archive",
                 icon: Archive,
-				tems: [                                                                                                                                                                                                                          
+				items: [                                                                                                                                                                                                                          
                     { title: "All Archives", url: "/?tab=archive" },                                                                                                                                                                                  
                     { title: "Add / Edit Post", url: "/post/archive/edit" },                                                                                                                                                                          
                     { title: "Taxonomy", url: "/post/archive/taxonomy" },                                                                                                                                                                             
