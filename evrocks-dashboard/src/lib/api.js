@@ -5,7 +5,7 @@ import { ContextMenu } from 'bits-ui';
 import { parse } from 'svelte/compiler';
 
 const auth_token = Buffer.from(
-    `${env.WP_USER ?? 'sansan'}:${env.WP_APP_PASSWORD ?? ''}`,
+    `${env.WP_USER ?? 'sansan'}:${env.WP_APP_PASSWORD ?? ''}`, // env was add on wordpress root folder, just make password application on the user manage 
 ).toString('base64');
 
 export const wpApi = axios.create({
