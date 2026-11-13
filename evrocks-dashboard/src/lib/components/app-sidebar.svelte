@@ -23,7 +23,7 @@
 
 	const data = {
 		user: {
-			name: "shadcn",
+			name: "evrocks",
 			email: "m@example.com",
 			avatar: "/avatars/shadcn.jpg",
 		},
