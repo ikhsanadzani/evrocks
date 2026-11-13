@@ -20,8 +20,9 @@
 	--popover-foreground: #0E0347;
 
 	/* 10% CTA / Primary Action */                                           
-	--primary: #A10000;
+	--primary: #DB000F;
 	--primary-foreground: #FFFFFF;
+	--primary-hover: #A10000;
 
 	/* 30% Secondary & Muted */                                              
 	--secondary: #0B2E8D;
@@ -65,6 +66,7 @@
 	--card-foreground: #F4F4F6;
 	--popover: #12121A;
 	--popover-foreground: #F4F4F6;
+	--primary-hover: #A10000;
 	--primary: #DB000F;
 	--primary-foreground: #FFFFFF;
 	--secondary: #1C1C26;
@@ -117,6 +119,7 @@
 	--color-muted-foreground: var(--muted-foreground);
 	--color-muted: var(--muted);
 	--color-secondary-foreground: var(--secondary-foreground);
+	--color-primary-hover: var(--primary-hover);
 	--color-secondary: var(--secondary);
 	--color-primary-foreground: var(--primary-foreground);
 	--color-primary: var(--primary);

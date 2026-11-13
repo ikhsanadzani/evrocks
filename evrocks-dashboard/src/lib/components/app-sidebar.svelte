@@ -18,6 +18,7 @@
 	import Archive from "phosphor-svelte/lib/Archive";
 	import FrameCorners from "phosphor-svelte/lib/FrameCorners";
 	import HandshakeIcon from "phosphor-svelte/lib/Handshake";
+	import SquaresFourIcon from "phosphor-svelte/lib/SquaresFour";
 
 	// for main nav
 	import * as Sidebar from "#lib/components/ui/sidebar/index.js";
@@ -38,7 +39,7 @@
             {
                 title: "Dashboard",
                 url: "/",
-                icon: DashboardIcon,
+                icon: SquaresFourIcon,
             },
             {
                 title: "Archive",

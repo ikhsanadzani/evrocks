@@ -3,14 +3,20 @@
 	import MailIcon from "@tabler/icons-svelte/icons/mail";
 	import * as Sidebar from "#lib/components/ui/sidebar/index.js";
 	import { Button } from "#lib/components/ui/button/index.js";
-	import type { Icon } from "@tabler/icons-svelte";
+	import type { Component } from "svelte";
 	import { page } from "$app/state";
 
-	let { items }: { items: { title: string; url: string; icon?: Icon }[] } = $props();
+    type NavItem = {
+        title: string;
+        url: string;
+        icon?: Component<any>;
+        items?: { title: string; url: string }[];
+    };
 
-	function is_menu_active(current_url: URL, menu_url: string): boolean {
-        const current_full_path = current_url.pathname + current_url.search;
-        return current_full_path === menu_url;
+    let { items }: { items: NavItem[] } = $props();
+
+	function is_menu_active(current_url: { pathname: string; search: string }, menu_url: string): boolean {
+        return current_url.pathname + current_url.search === menu_url;
     }
 </script>
 
