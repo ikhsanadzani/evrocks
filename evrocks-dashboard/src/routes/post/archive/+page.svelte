@@ -31,9 +31,12 @@
                         <td class="p-3">
                             <span class="badge-status">{item.status}</span>
                         </td>
+                        <td class="p-3 text-muted-foreground">
+                            {new Date(item.date).toLocaleDateString('id-ID')}
+                        </td>
 
                         <td class="p-3 text-right">
-                            <Button href="/post/archive/edit/{item.id}" variant="outline" size="sm">
+                            <Button href="/?tab=archive&view=edit&id={item.id}" variant="outline" size="sm">
                                 Edit
                             </Button>
                         </td>

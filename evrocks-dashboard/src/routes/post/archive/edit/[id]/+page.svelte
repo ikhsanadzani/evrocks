@@ -23,7 +23,8 @@
         </div>
     {/if}
 
-    <form method="POST" use:enhance class="space-y-4">
+    <form method="POST"  action="?/update_archive" use:enhance  class="space-y-4">
+    <input type="hidden" name="id" value={data.archive.id} />
         <div class="space-y-2">
             <Label for="title">Title</Label>
             <Input id="title" name="title" value={data.archive.raw_title} required />
@@ -53,9 +54,9 @@
             >{data.archive.raw_content}</textarea>
         </div>
 
-        <div class="flex justify-end gap-2 pt-4">
-            <Button href="/?tab=archive" variant="ghost">Batal</Button>
+        <div class="flex items-center gap-2 pt-2">
             <Button type="submit">Simpan Perubahan</Button>
+            <Button href="/?tab=archive" variant="outline">Batal</Button>
         </div>
     </form>
 </div>

@@ -45,11 +45,11 @@
                 title: "Archive",
                 url: "/?tab=archive",
                 icon: Archive,
-				items: [                                                                                                                                                                                                                          
-                    { title: "All Archives", url: "/?tab=archive" },                                                                                                                                                                                  
-                    { title: "Add / Edit Post", url: "/post/archive/edit" },                                                                                                                                                                          
-                    { title: "Taxonomy", url: "/post/archive/taxonomy" },                                                                                                                                                                             
-                ],       
+				items: [
+					{ title: "All Archives", url: "/?tab=archive" },
+					{ title: "Edit Archive", url: "/?tab=archive&view=edit" },
+					{ title: "Taxonomy", url: "/?tab=archive&view=taxonomy" },
+				],     
             },
             {
                 title: "Exhibition",

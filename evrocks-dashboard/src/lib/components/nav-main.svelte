@@ -1,6 +1,4 @@
 <script lang="ts">
-	import CirclePlusFilledIcon from "@tabler/icons-svelte/icons/circle-plus-filled";
-	import MailIcon from "@tabler/icons-svelte/icons/mail";
 	import * as Sidebar from "#lib/components/ui/sidebar/index.js";
 	import { Button } from "#lib/components/ui/button/index.js";
 	import type { Component } from "svelte";
@@ -23,31 +21,14 @@
 <Sidebar.Group>
     <Sidebar.GroupContent class="flex flex-col gap-2">
         <Sidebar.Menu>
-            <Sidebar.MenuItem class="flex items-center gap-2">
-                <Sidebar.MenuButton
-                    class="min-w-8 bg-primary text-primary-foreground duration-200 ease-linear hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground"
-                    tooltipContent="Quick create"
-                >
-                    <CirclePlusFilledIcon />
-                    <span>Quick Create</span>
-                </Sidebar.MenuButton>
-                <Button
-                    size="icon"
-                    class="size-8 group-data-[collapsible=icon]:opacity-0"
-                    variant="outline"
-                >
-                    <MailIcon />
-                    <span class="sr-only">Inbox</span>
-                </Button>
-            </Sidebar.MenuItem>
-        </Sidebar.Menu>
-
-        <Sidebar.Menu>
             {#each items as item (item.title)}
-                {@const is_active = is_menu_active(page.url, item.url)}
+                {@const is_parent_active =
+                    item.url === "/"
+                        ? page.url.pathname === "/" && !page.url.searchParams.get("tab")
+                        : page.url.searchParams.get("tab") === new URL(item.url, "http://localhost").searchParams.get("tab")}
 
-                <Sidebar.MenuItem>
-                    <Sidebar.MenuButton isActive={is_active} tooltipContent={item.title}>
+                        <Sidebar.MenuItem>
+                    <Sidebar.MenuButton isActive={is_parent_active} tooltipContent={item.title}>
                         {#snippet child({ props })}
                             <a href={item.url} {...props}>
                                 {#if item.icon}
@@ -57,6 +38,23 @@
                             </a>
                         {/snippet}
                     </Sidebar.MenuButton>
+
+                    {#if item.items?.length}
+                        <Sidebar.MenuSub>
+                            {#each item.items as sub_item (sub_item.title)}
+                                {@const is_sub_active = is_menu_active(page.url, sub_item.url)}
+                                <Sidebar.MenuSubItem>
+                                    <Sidebar.MenuSubButton isActive={is_sub_active}>
+                                        {#snippet child({ props })}
+                                            <a href={sub_item.url} {...props}>
+                                                <span>{sub_item.title}</span>
+                                            </a>
+                                        {/snippet}
+                                    </Sidebar.MenuSubButton>
+                                </Sidebar.MenuSubItem>
+                            {/each}
+                        </Sidebar.MenuSub>
+                    {/if}
                 </Sidebar.MenuItem>
             {/each}
         </Sidebar.Menu>

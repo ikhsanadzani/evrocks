@@ -13,11 +13,13 @@
 
 	// for page post to enable tab
 	import ArchiveView from "./post/archive/+page.svelte";
+	import ArchiveEditView from "./post/archive/edit/[id]/+page.svelte";
 	import ExhibitionView from "./post/exhibition/+page.svelte";
 	import LenderView from "./post/lending/+page.svelte";
 
 	let { data } = $props();
 	let active_tab = $derived(page.url.searchParams.get("tab") ?? "dashboard");
+	let active_view = $derived(page.url.searchParams.get("view") ?? "list");
 	
 
 </script>
@@ -40,8 +42,18 @@
 					</Tabs.Content>
 					<!-- for archive view tab -->
 					<Tabs.Content value="archive">
-                        <ArchiveView data={{ archives: data.archives }} />
-                    </Tabs.Content>
+						{#if active_view === "edit"}
+							{#if data.editing_archive}
+								<ArchiveEditView data={{ archive: data.editing_archive }} {form} />
+							{:else}
+								<div class="p-6 text-sm text-muted-foreground">
+									Pilih item dari daftar <strong>All Archives</strong> terlebih dahulu untuk diedit.
+								</div>
+							{/if}
+						{:else}
+							<ArchiveView data={{ archives: data.archives }} />
+						{/if}
+					</Tabs.Content>
 					<!-- for exhibition view tab -->
 					<Tabs.Content value="exhibition">
                         <ExhibitionView data={{ exhibitions: data.exhibitions }} />
