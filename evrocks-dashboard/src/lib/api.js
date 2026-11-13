@@ -1,16 +1,9 @@
 // @ts-nocheck
 import axios from 'axios';
-import { url } from 'zod';
 
-try {
-    process.loadEnvFile();
-} catch {
-    // Abaikan jika file .env tidak ditemukan (misalnya saat pakai env dari sistem/OS)
-}
+try { process.loadEnvFile(); } catch {}
 
-const basic_auth = Buffer.from(
-    `${process.env.WP_USER}:${process.env.WP_APP_PASSWORD}`
-).toString('base64');
+const basic_auth = Buffer.from(`${process.env.WP_USER}:${process.env.WP_APP_PASSWORD}`).toString('base64');
 
 export const wpApi = axios.create({
     baseURL: process.env.WP_API_URL || 'http://192.168.122.204/wp-json',
@@ -21,9 +14,21 @@ export const wpApi = axios.create({
     }
 });
 
-const endpoints = ['archive', 'exhibition'];
-
-const parseItem = (item) => ({
+export const api_service = {
+    archive: create_cpt_service('archive'),
+    exhibition: create_cpt_service('exhibition'),
+    lender: {
+        async getAll(per_page = 50) {
+            try {
+                const res = await wpApi.get('/evrocks/v1/lender', { params: { per_page } });
+                return { items: res.data, total: Number(res.headers['x-wp-total'] || res.data.length) };
+            } catch (err) {
+                return { items: [], total: 0, error: err.message };
+            }
+        }
+    }
+};
+export const parse_wp_post = (item) => ({
     id: item.id,
     slug: item.slug,
     title: item.title?.rendered ?? 'Untitled',
@@ -120,31 +125,3 @@ export const api_service = {
     ...cpt_services,
     lender: lender_service
 };
-
-const media_service = {
-    async upload (file) {
-        try {
-            const payload = new FormData();
-            payload.append('file', file, file.name);
-
-            const response = await wpApi.post('/wp/v2/media', payload, {
-                headers: { 'Content-type': 'multipart/form-data' }
-            });
-
-            return{
-                id: response.data.id,
-                url: response.data.source_url,
-                error: null
-            }
-        } catch (error) {
-            console.error('[api_service.media.upload] Error', error.response?.data || error.message);
-
-            return{
-                id: null,
-                url: null,
-                error: error.response?.data?.message || error.message
-            }
-            
-        }
-    }
-}

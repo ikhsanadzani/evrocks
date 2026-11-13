@@ -3,6 +3,30 @@ import { fail, redirect } from '@sveltejs/kit';
 import { api_service } from '#lib/api.js';
 import { archive_service } from '#lib/services/archive.service.js';
 
+async function build_update_payload(form_data) {
+    const payload = {
+        title: form_data.get('title')?.toString().trim(),
+        content: form_data.get('content')?.toString() ?? '',
+        status: form_data.get('status')?.toString() ?? 'publish'
+    };
+
+    const image_file = form_data.get('featured_image');
+    if (image_file instanceof File && image_file.size > 0) {
+        const uploaded_img = await api_service.media.upload(image_file);
+        if (uploaded_img.error) return { payload: null, error: `Upload gambar gagal: ${uploaded_img.error}` };
+        payload.featured_media = uploaded_img.id;
+    }
+
+    const attachment_file = form_data.get('attachment_file');
+    if (attachment_file instanceof File && attachment_file.size > 0) {
+        const uploaded_doc = await api_service.media.upload(attachment_file);
+        if (uploaded_doc.error) return { payload: null, error: `Upload file gagal: ${uploaded_doc.error}` };
+        payload.meta = { file_digital: uploaded_doc.url };
+    }
+
+    return { payload, error: null };
+}
+
 export async function load({ url }) {
     const tab = url.searchParams.get('tab');
     const view = url.searchParams.get('view');
