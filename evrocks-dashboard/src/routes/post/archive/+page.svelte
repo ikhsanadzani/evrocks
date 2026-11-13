@@ -1,5 +1,6 @@
 <script>
     // @ts-nocheck
+    import { Button } from "#lib/components/ui/button/index.ts";
     let { data } = $props();
 </script>
 
@@ -18,6 +19,7 @@
                     <th class="p-3 font-medium">Slug</th>
                     <th class="p-3 font-medium">Status</th>
                     <th class="p-3 font-medium">Date</th>
+                    <th class="p-3 font-medium text-right">Action</th>
                 </tr>
             </thead>
             <tbody class="divide-y">
@@ -29,13 +31,20 @@
                         <td class="p-3">
                             <span class="badge-status">{item.status}</span>
                         </td>
+
+                        <td class="p-3 text-right">
+                            <Button href="/post/archive/edit/{item.id}" variant="outline" size="sm">
+                                Edit
+                            </Button>
+                        </td>
+
                         <td class="p-3 text-muted-foreground">
                             {new Date(item.date).toLocaleDateString('id-ID')}
                         </td>
                     </tr>
                 {:else}
                     <tr>
-                        <td colspan="5" class="p-6 text-center text-muted-foreground">
+                        <td colspan="6" class="p-6 text-center text-muted-foreground">
                             Belum ada data archive.
                         </td>
                     </tr>
