@@ -37,11 +37,21 @@
                 title: "Archive",
                 url: "/?tab=archive",
                 icon: ListDetailsIcon,
+				tems: [                                                                                                                                                                                                                          
+                    { title: "All Archives", url: "/?tab=archive" },                                                                                                                                                                                  
+                    { title: "Add / Edit Post", url: "/post/archive/edit" },                                                                                                                                                                          
+                    { title: "Taxonomy", url: "/post/archive/taxonomy" },                                                                                                                                                                             
+                ],       
             },
             {
                 title: "Exhibition",
                 url: "/?tab=exhibition",
                 icon: ChartBarIcon,
+				items: [                                                                                                                                                                                                                          
+                    { title: "All Exhibitions", url: "/?tab=exhibition" },                                                                                                                                                                            
+                    { title: "Add / Edit Post", url: "/post/exhibition/edit" },                                                                                                                                                                       
+                    { title: "Taxonomy", url: "/post/exhibition/taxonomy" },                                                                                                                                                                          
+                ],                                                                                                                                                                                                                                
             },
             {
                 title: "Lender",
@@ -54,54 +64,7 @@
                 icon: UsersIcon,
             },
         ],
-		navClouds: [
-			{
-				title: "Capture",
-				icon: CameraIcon,
-				isActive: true,
-				url: "#",
-				items: [
-					{
-						title: "Active Proposals",
-						url: "#",
-					},
-					{
-						title: "Archived",
-						url: "#",
-					},
-				],
-			},
-			{
-				title: "Proposal",
-				icon: FileDescriptionIcon,
-				url: "#",
-				items: [
-					{
-						title: "Active Proposals",
-						url: "#",
-					},
-					{
-						title: "Archived",
-						url: "#",
-					},
-				],
-			},
-			{
-				title: "Prompts",
-				icon: FileAiIcon,
-				url: "#",
-				items: [
-					{
-						title: "Active Proposals",
-						url: "#",
-					},
-					{
-						title: "Archived",
-						url: "#",
-					},
-				],
-			},
-		],
+		
 		navSecondary: [
 			{
 				title: "Settings",
@@ -117,23 +80,6 @@
 				title: "Search",
 				url: "#",
 				icon: SearchIcon,
-			},
-		],
-		documents: [
-			{
-				name: "Data Library",
-				url: "#",
-				icon: DatabaseIcon,
-			},
-			{
-				name: "Reports",
-				url: "#",
-				icon: ReportIcon,
-			},
-			{
-				name: "Word Assistant",
-				url: "#",
-				icon: FileWordIcon,
 			},
 		],
 	};
@@ -158,8 +104,7 @@
 	</Sidebar.Header>
 	<Sidebar.Content>
 		<NavMain items={data.navMain} />
-		<NavDocuments items={data.documents} />
-		<NavSecondary items={data.navSecondary} class="mt-auto" />
+		<NavSecondary items={data.navSecondary}  />
 	</Sidebar.Content>
 	<Sidebar.Footer>
 		<NavUser user={data.user} />

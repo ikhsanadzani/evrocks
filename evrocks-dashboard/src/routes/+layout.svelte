@@ -8,7 +8,6 @@
 	let { children }: LayoutProps = $props();
 </script>
 
-<ModeWatcher />
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
