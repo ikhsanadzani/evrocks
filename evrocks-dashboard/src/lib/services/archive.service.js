@@ -4,7 +4,7 @@ import { wpApi } from "#lib/api.js";
 export const archive_service = {
     async getAll(perPage = 50) {
         try {
-            const response = await wpApi.get('/archive', {
+            const response = await wpApi.get('/wp/v2/archive', {
                 params: { 
                     per_page: perPage, 
                     _embed: true 
@@ -29,7 +29,7 @@ export const archive_service = {
         } catch (error) {
             console.error('gagal mengambil data dari wordpress', error.message);
             return {
-                archive_service: [],
+                archives: [],
                 total: 0,
                 error: error.message
             };

@@ -8,8 +8,8 @@ export async function load() {
     if (result.error) {
         console.warn('Saat memuat arsip: ${result.error}');
     }
-    return {
-        archive: result.archives,
-        total: result.total
+    return {                                                                                                                                                      
+        archives: result.archives,                                                                                                                                
+        total: result.total                                                                                                                                       
     };
 }

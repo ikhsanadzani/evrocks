@@ -4,7 +4,7 @@ import { wpApi } from "#lib/api.js";
 export const exhibition_service = {
     async getAll(perPage = 50) {
         try {
-            const response = await wpApi.get('/exhibition', {
+            const response = await wpApi.get('/wp/v2/exhibition', {
                 params: { 
                     per_page: perPage, 
                     _embed: true 
@@ -23,7 +23,7 @@ export const exhibition_service = {
             }));
 
             return {
-                exhibition,
+                exhibitions,
                 total: Number(response.headers['x-wp-total'] || exhibitions.length)
             };
         } catch (error) {
