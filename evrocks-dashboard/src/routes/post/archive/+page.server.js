@@ -9,7 +9,7 @@ export async function load() {
         console.warn('Saat memuat arsip: ${result.error}');
     }
     return {
-        archives: result.archives,
+        archive: result.archives,
         total: result.total
     };
 }

@@ -28,32 +28,32 @@
 			avatar: "/avatars/shadcn.jpg",
 		},
 		navMain: [
-			{
-				title: "Dashboard",
-				url: "/",
-				icon: DashboardIcon,
-			},
-			{
-				title: "archive",
-				url: "/post/archive",
-				icon: ListDetailsIcon,
-			},
-			{
-				title: "Exhibition",
-				url: "/post/exhibition",
-				icon: ChartBarIcon,
-			},
-			{
-				title: "Lender",
-				url: "/post/lending",
-				icon: FolderIcon,
-			},
-			{
-				title: "Team",
-				url: "#",
-				icon: UsersIcon,
-			},
-		],
+            {
+                title: "Dashboard",
+                url: "/",
+                icon: DashboardIcon,
+            },
+            {
+                title: "Archive",
+                url: "/?tab=archive",
+                icon: ListDetailsIcon,
+            },
+            {
+                title: "Exhibition",
+                url: "/?tab=exhibition",
+                icon: ChartBarIcon,
+            },
+            {
+                title: "Lender",
+                url: "/?tab=lender",
+                icon: FolderIcon,
+            },
+            {
+                title: "Team",
+                url: "#",
+                icon: UsersIcon,
+            },
+        ],
 		navClouds: [
 			{
 				title: "Capture",

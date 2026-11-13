@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 export const wpApi = axios.create({
-    baseURL: 'http://192.168.122.204/wp-json',
+    baseURL: 'http://192.168.122.204/wp-json', // just example
     timeout: 5000,
     headers: {
         'Content-Type': 'application/json'

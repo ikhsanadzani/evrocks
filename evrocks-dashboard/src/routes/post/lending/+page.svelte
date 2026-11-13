@@ -14,7 +14,7 @@
             <thead class="bg-muted text-muted-foreground border-b">
                 <tr>
                     <th class="p-3 font-medium w-16">ID</th>
-                    <th class="p-3 font-medium">User ID</th>
+                    <th class="p-3 font-medium">Title</th>
                     <th class="p-3 font-medium">Loan Purpose</th>
                     <th class="p-3 font-medium">Requested Archives</th>
                     <th class="p-3 font-medium">Duration / Exp</th>
