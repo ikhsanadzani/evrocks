@@ -14,20 +14,6 @@ export const wpApi = axios.create({
     }
 });
 
-export const api_service = {
-    archive: create_cpt_service('archive'),
-    exhibition: create_cpt_service('exhibition'),
-    lender: {
-        async getAll(per_page = 50) {
-            try {
-                const res = await wpApi.get('/evrocks/v1/lender', { params: { per_page } });
-                return { items: res.data, total: Number(res.headers['x-wp-total'] || res.data.length) };
-            } catch (err) {
-                return { items: [], total: 0, error: err.message };
-            }
-        }
-    }
-};
 export const parse_wp_post = (item) => ({
     id: item.id,
     slug: item.slug,
@@ -43,85 +29,86 @@ export const parse_wp_post = (item) => ({
     metabox: item.metabox ?? {}
 });
 
-const parseLoanItem = (item) => ({
-    id: Number(item.id),
-    user_id: Number(item.user_id),
-    purpose: item.purpose ?? '-',
-    duration: item.duration ?? '',
-    title: item.title ?? '',
-    loan: typeof item.loan === 'string' ? JSON.parse(item.loan || '[]') : (item.loan ?? []),
-    reason: item.reason ?? '-',
-    status: item.status ?? 'pending',
-    request_time: item.request_time ?? ''
-});
+async function upload_media(file) {
+    if (!(file instanceof File) || file.size === 0) return { data: null, error: null };
 
-const cpt_services = Object.fromEntries(
-    endpoints.map((endpoint) => [
-        endpoint,
-        {
-            async getAll(per_pages = 50) {
-                try {
-                    const response = await wpApi.get(`/wp/v2/${endpoint}`, {
-                        params: { per_page: per_pages, status: 'any', _embed: true }
-                    });
-                    const items = response.data.map(parseItem);
+    try {
+        const body = new FormData();
+        body.append('file', file, file.name);
 
-                    return {
-                        items,
-                        total: Number(response.headers['x-wp-total'] || items.length)
-                    };
-                } catch (error) {
-                    console.error(`[api_service.${endpoint}] Error:`, error.message);
-                    return { items: [], total: 0, error: error.message };
-                }
-            },
+        const res = await wpApi.post('/wp/v2/media', body, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        return { data: { id: res.data.id, url: res.data.source_url }, error: null };
+    } catch (err) {
+        return { data: null, error: err.response?.data?.message || err.message };
+    }
+}
 
-            async get_by_id(id) {
-                try {
-                    const response = await wpApi.get(`/wp/v2/${endpoint}/${id}`, {
-                        params: { context: 'edit', _embed: true }
-                    });
-                    return { item: parseItem(response.data), error: null };
-                } catch (error) {
-                    console.error(`[api_service.${endpoint}.get_by_id] Error:`, error.message);
-                    return { item: null, error: error.response?.data?.message || error.message };
-                }
-            },
-
-            async update(id, payload) {
-                try {
-                    const response = await wpApi.post(`/wp/v2/${endpoint}/${id}`, payload);
-                    return { item: parseItem(response.data), error: null };
-                } catch (error) {
-                    console.error(`[api_service.${endpoint}.update] Error:`, error.message);
-                    return { item: null, error: error.response?.data?.message || error.message };
-                }
-            }
-        }
-    ])
-);
-
-const lender_service = {
-    async getAll(per_pages = 50) {
+const create_cpt_service = (endpoint) => ({
+    async getAll(per_page = 50) {
         try {
-            const response = await wpApi.get('/evrocks/v1/lender', {
-                params: { per_page: per_pages }
+            const res = await wpApi.get(`/wp/v2/${endpoint}`, {
+                params: { per_page, status: 'any', _embed: true }
             });
+            const items = res.data.map(parse_wp_post);
+            return { items, total: Number(res.headers['x-wp-total'] || items.length), error: null };
+        } catch (err) {
+            console.error(`[api_service.${endpoint}.getAll] Error:`, err.response?.data || err.message);
+            return { items: [], total: 0, error: err.response?.data?.message || err.message };
+        }
+    },
+    async get_by_id(id) {
+        try {
+            const res = await wpApi.get(`/wp/v2/${endpoint}/${id}`, {
+                params: { context: 'edit', _embed: true }
+            });
+            return { item: parse_wp_post(res.data), error: null };
+        } catch (err) {
+            return { item: null, error: err.response?.data?.message || err.message };
+        }
+    },
 
-            const items = response.data.map(parseLoanItem);
+    async update_from_form(id, form_data) {
+        const title = form_data.get('title')?.toString().trim();
+        if (!id || !title) return { error: 'ID dan judul wajib diisi.' };
 
-            return {
-                items,
-                total: Number(response.headers['x-wp-total'] || items.length)
-            };
-        } catch (error) {
-            console.error('[api_service.lender] Error:', error.message);
-            return { items: [], total: 0, error: error.message };
+        const [img_res, doc_res] = await Promise.all([
+            upload_media(form_data.get('featured_image')),
+            upload_media(form_data.get('attachment_file'))
+        ]);
+
+        if (img_res.error) return { error: `Upload gambar gagal: ${img_res.error}` };
+        if (doc_res.error) return { error: `Upload file gagal: ${doc_res.error}` };
+
+        const payload = {
+            title,
+            content: form_data.get('content')?.toString() ?? '',
+            status: form_data.get('status')?.toString() ?? 'publish',
+            ...(img_res.data && { featured_media: img_res.data.id }),
+            ...(doc_res.data && { meta: { file_digital: doc_res.data.url } })
+        };
+
+        try {
+            await wpApi.post(`/wp/v2/${endpoint}/${id}`, payload);
+            return { error: null };
+        } catch (err) {
+            return { error: err.response?.data?.message || err.message };
         }
     }
-};
+});
 
 export const api_service = {
-    ...cpt_services,
-    lender: lender_service
+    archive: create_cpt_service('archive'),
+    exhibition: create_cpt_service('exhibition'),
+    lender: {
+        async getAll(per_page = 50) {
+            try {
+                const res = await wpApi.get('/evrocks/v1/lender', { params: { per_page } });
+                return { items: res.data, total: Number(res.headers['x-wp-total'] || res.data.length) };
+            } catch (err) {
+                return { items: [], total: 0, error: err.message };
+            }
+        }
+    }
 };

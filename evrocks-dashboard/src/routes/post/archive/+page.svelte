@@ -40,10 +40,6 @@
                                 Edit
                             </Button>
                         </td>
-
-                        <td class="p-3 text-muted-foreground">
-                            {new Date(item.date).toLocaleDateString('id-ID')}
-                        </td>
                     </tr>
                 {:else}
                     <tr>
