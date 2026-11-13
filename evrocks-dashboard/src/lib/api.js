@@ -1,5 +1,12 @@
 // @ts-nocheck
 import axios from 'axios';
+import { env } from '$env/dynamic/private';
+import { ContextMenu } from 'bits-ui';
+import { parse } from 'svelte/compiler';
+
+const auth_token = Buffer.from(
+    `${env.WP_USER ?? 'sansan'}:${env.WP_APP_PASSWORD ?? ''}`,
+).toString('base64');
 
 export const wpApi = axios.create({
     baseURL: 'http://192.168.122.204/wp-json', // just example
@@ -15,6 +22,8 @@ const parseItem = (item) => ({
     id: item.id,
     slug: item.slug,
     title: item.title?.rendered ?? 'Untitled',
+    raw_title: item.title?.raw ?? item.title?.rendered ?? '',
+    raw_content: item.content?.raw ?? item.content?.rendered ?? '',
     content: item.content?.rendered ?? '',
     date: item.date,
     status: item.status,
@@ -52,6 +61,29 @@ const cpt_services = Object.fromEntries(
                 } catch (error) {
                     console.error(`[api_service.${endpoint}] Error:`, error.message);
                     return { items: [], total: 0, error: error.message };
+                }
+            },
+
+            async get_by_id(id) {
+                try {
+                    const response = await wpApi.get(`/wp/v2/${endpoint}/${id}`, {
+                        params: { context: 'edit' }
+                    });
+                    return { item: parseItem(response.data), error: null };
+                } catch (error) {
+                    console.error(`[api_service.${endpoint}.getById] Error:`, error.message);
+                    return { item: null, error: error.response?.data?.message || error.message };
+                }
+            },
+
+            async update(id, payload) {
+                try {
+                    const response = await wpApi.post(`/wp/v2/${endpoint}/${id}`, payload);
+                    return { item: parseItem(response.data), error: null };
+                } catch (error) {
+                    console.error(`[api_service.${endpoint}.update] Error:`, error.message);
+                    return { item: null, error: error.response?.data?.message || error.message };
+                    
                 }
             }
         }
