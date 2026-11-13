@@ -16,6 +16,7 @@
 	import ArchiveEditView from "./post/archive/edit/[id]/+page.svelte";
 	import ExhibitionView from "./post/exhibition/+page.svelte";
 	import LenderView from "./post/lending/+page.svelte";
+	import ExhibitionEditView from "./post/exhibition/edit/[id]/+page.svelte";
 
 	let { data, form } = $props();
 	let active_tab = $derived(page.url.searchParams.get("tab") ?? "dashboard");
@@ -56,8 +57,22 @@
 					</Tabs.Content>
 					<!-- for exhibition view tab -->
 					<Tabs.Content value="exhibition">
-                        <ExhibitionView data={{ exhibitions: data.exhibitions }} />
-                    </Tabs.Content>
+						{#if active_view === "edit"}
+							{#if data.editing_exhibition}
+								<ExhibitionEditView data={{ exhibition: data.editing_exhibition }} {form} />
+							{:else if data.edit_exhibition_error}
+								<div class="p-6 text-sm text-destructive">
+									Gagal memuat data exhibition: {data.edit_exhibition_error}
+								</div>
+							{:else}
+								<div class="p-6 text-sm text-muted-foreground">
+									Pilih pameran dari daftar <strong>All Exhibitions</strong> terlebih dahulu untuk diedit.
+								</div>
+							{/if}
+						{:else}
+							<ExhibitionView data={{ exhibitions: data.exhibitions }} />
+						{/if}
+					</Tabs.Content>
 					<!-- for lending view tab -->
 					<Tabs.Content value="lender">
                         <LenderView data={{ loans: data.loans }} />

@@ -56,9 +56,8 @@
                 url: "/?tab=exhibition",
                 icon: FrameCorners,
 				items: [                                                                                                                                                                                                                          
-                    { title: "All Exhibitions", url: "/?tab=exhibition" },                                                                                                                                                                            
-                    { title: "Add / Edit Post", url: "/post/exhibition/edit" },                                                                                                                                                                       
-                    { title: "Taxonomy", url: "/post/exhibition/taxonomy" },                                                                                                                                                                          
+                    { title: "All Exhibitions", url: "/?tab=exhibition" },
+					{ title: "Edit Exhibition", url: "/?tab=exhibition&view=edit" },
                 ],                                                                                                                                                                                                                                
             },
             {

@@ -1,5 +1,6 @@
 // @ts-nocheck
 import axios from 'axios';
+import { url } from 'zod';
 
 try {
     process.loadEnvFile();
@@ -13,7 +14,7 @@ const basic_auth = Buffer.from(
 
 export const wpApi = axios.create({
     baseURL: process.env.WP_API_URL || 'http://192.168.122.204/wp-json',
-    timeout: 5000,
+    timeout: 15000,
     headers: {
         'Content-Type': 'application/json',
         Authorization: `Basic ${basic_auth}`
@@ -31,6 +32,9 @@ const parseItem = (item) => ({
     content: item.content?.rendered ?? '',
     date: item.date,
     status: item.status,
+    featured_media: item.featured_media ?? 0,
+    featured_image_url: item._embedded?.['wp:featuredmedia']?.[0]?.source_url ?? null,
+    file_digital: item.meta?.file_digital ?? item.metabox?.file_digital ?? '',
     metabox: item.metabox ?? {}
 });
 
@@ -53,9 +57,8 @@ const cpt_services = Object.fromEntries(
             async getAll(per_pages = 50) {
                 try {
                     const response = await wpApi.get(`/wp/v2/${endpoint}`, {
-                        params: { per_page: per_pages, _embed: true }
+                        params: { per_page: per_pages, status: 'any', _embed: true }
                     });
-
                     const items = response.data.map(parseItem);
 
                     return {
@@ -71,7 +74,7 @@ const cpt_services = Object.fromEntries(
             async get_by_id(id) {
                 try {
                     const response = await wpApi.get(`/wp/v2/${endpoint}/${id}`, {
-                        params: { context: 'edit' }
+                        params: { context: 'edit', _embed: true }
                     });
                     return { item: parseItem(response.data), error: null };
                 } catch (error) {
@@ -117,3 +120,31 @@ export const api_service = {
     ...cpt_services,
     lender: lender_service
 };
+
+const media_service = {
+    async upload (file) {
+        try {
+            const payload = new FormData();
+            payload.append('file', file, file.name);
+
+            const response = await wpApi.post('/wp/v2/media', payload, {
+                headers: { 'Content-type': 'multipart/form-data' }
+            });
+
+            return{
+                id: response.data.id,
+                url: response.data.source_url,
+                error: null
+            }
+        } catch (error) {
+            console.error('[api_service.media.upload] Error', error.response?.data || error.message);
+
+            return{
+                id: null,
+                url: null,
+                error: error.response?.data?.message || error.message
+            }
+            
+        }
+    }
+}

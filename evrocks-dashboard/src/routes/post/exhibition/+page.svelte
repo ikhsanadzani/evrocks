@@ -1,5 +1,6 @@
 <script>
     // @ts-nocheck
+    import { Button } from "#lib/components/ui/button/index.ts";
     let { data } = $props();
 </script>
 
@@ -25,9 +26,14 @@
                     </div>
                 </div>
 
-                <div class="pt-3 border-t flex items-center justify-between text-xs">
-                    <span class="text-muted-foreground">Slug: {item.slug}</span>
-                    <span class="badge-status">{item.status}</span>
+                <div class="pt-3 border-t flex items-center justify-between gap-2 text-xs">
+                    <div class="flex items-center gap-2 min-w-0">
+                        <span class="badge-status">{item.status}</span>
+                        <span class="text-muted-foreground truncate">{item.slug}</span>
+                    </div>
+                    <Button href="/?tab=exhibition&view=edit&id={item.id}" variant="outline" size="sm">
+                        Edit
+                    </Button>
                 </div>
             </div>
         {:else}
