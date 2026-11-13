@@ -1,18 +1,22 @@
 // @ts-nocheck
 import axios from 'axios';
-import { env } from '$env/dynamic/private';
-import { ContextMenu } from 'bits-ui';
-import { parse } from 'svelte/compiler';
 
-const auth_token = Buffer.from(
-    `${env.WP_USER ?? 'sansan'}:${env.WP_APP_PASSWORD ?? ''}`, // env was add on wordpress root folder, just make password application on the user manage 
+try {
+    process.loadEnvFile();
+} catch {
+    // Abaikan jika file .env tidak ditemukan (misalnya saat pakai env dari sistem/OS)
+}
+
+const basic_auth = Buffer.from(
+    `${process.env.WP_USER}:${process.env.WP_APP_PASSWORD}`
 ).toString('base64');
 
 export const wpApi = axios.create({
-    baseURL: 'http://192.168.122.204/wp-json', // just example
+    baseURL: process.env.WP_API_URL || 'http://192.168.122.204/wp-json',
     timeout: 5000,
     headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        Authorization: `Basic ${basic_auth}`
     }
 });
 
@@ -71,7 +75,7 @@ const cpt_services = Object.fromEntries(
                     });
                     return { item: parseItem(response.data), error: null };
                 } catch (error) {
-                    console.error(`[api_service.${endpoint}.getById] Error:`, error.message);
+                    console.error(`[api_service.${endpoint}.get_by_id] Error:`, error.message);
                     return { item: null, error: error.response?.data?.message || error.message };
                 }
             },
@@ -83,7 +87,6 @@ const cpt_services = Object.fromEntries(
                 } catch (error) {
                     console.error(`[api_service.${endpoint}.update] Error:`, error.message);
                     return { item: null, error: error.response?.data?.message || error.message };
-                    
                 }
             }
         }
