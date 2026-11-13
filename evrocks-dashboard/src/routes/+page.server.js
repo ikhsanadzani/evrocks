@@ -1,6 +1,10 @@
-import { fail } from '@sveltejs/kit';
+// @ts-nocheck
+
+import { error, fail } from '@sveltejs/kit';
 import { api_service } from '#lib/api.js';
 import { archive_service } from '#lib/services/archive.service.js';
+import { form } from '$app/server';
+import { success } from 'zod';
   
 export async function load({url}) {
         const tab = url.searchParams.get('tab');
@@ -26,4 +30,29 @@ export async function load({url}) {
         };
     }
 
-    
+    export const actions = {
+        update_archive: async ({request}) => {
+            const form_data = await request.formData();
+            const id = form_data.get('id')?.toString();
+            const title = form_data.get('title')?.toString();
+            const content = form_data.get('content')?.toString() ?? '';
+            const status = form_data.get('status') ?.toString() ?? 'Publish';
+
+            if (!id || !title) {
+                return fail(400, { error: 'ID and Title Is required' });
+            }
+
+            const { error: update_error } = await api_service.archive.update(id, {
+                title,
+                content,
+                status
+            });
+
+            if (update_error) {
+                return fail(500, { error: update_error });
+            }
+
+            return { success: true };
+        }
+    }
+
