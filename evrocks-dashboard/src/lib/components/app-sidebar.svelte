@@ -45,7 +45,7 @@
 			},
 			{
 				title: "Lender",
-				url: "#",
+				url: "/post/lending",
 				icon: FolderIcon,
 			},
 			{
