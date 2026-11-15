@@ -1,15 +1,15 @@
-import { archive_service } from "#lib/services/archive.service.js";
+import { api_service } from "#lib/api.js";
 
 export async function load() {
-    const result = await archive_service.getAll(50);
+    const result = await api_service.archive.getAll(50);
 
     console.log("Total Data:", result.total);
 
     if (result.error) {
-        console.warn('Saat memuat arsip: ${result.error}');
+        console.warn(`Saat memuat arsip: ${result.error}`);
     }
-    return {                                                                                                                                                      
-        archives: result.archives,                                                                                                                                
-        total: result.total                                                                                                                                       
+    return {
+        archives: result.items,
+        total: result.total
     };
 }

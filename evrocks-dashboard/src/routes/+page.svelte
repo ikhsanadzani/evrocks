@@ -77,7 +77,7 @@
 							{/if}
 						{:else if active_view === "edit"}
 							{#if data.editing_archive}
-								<ArchiveEditView data={{ archive: data.editing_archive }} {form} />
+								<ArchiveEditView data={{ archive: data.editing_archive, taxonomy_terms: data.edit_taxonomy_terms }} {form} />
 							{:else}
 								<div class="p-6 text-sm text-muted-foreground">
 									Pilih item dari daftar <strong>All Archives</strong> terlebih dahulu untuk diedit.
@@ -120,7 +120,7 @@
 							{/if}
 						{:else if active_view === "edit"}
 							{#if data.editing_exhibition}
-								<ExhibitionEditView data={{ exhibition: data.editing_exhibition }} {form} />
+								<ExhibitionEditView data={{ exhibition: data.editing_exhibition, archives: data.archives, taxonomy_terms: data.edit_taxonomy_terms }} {form} />
 							{:else if data.edit_exhibition_error}
 								<div class="p-6 text-sm text-destructive">
 									Gagal memuat data exhibition: {data.edit_exhibition_error}

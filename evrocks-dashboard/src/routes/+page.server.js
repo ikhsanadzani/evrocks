@@ -32,13 +32,16 @@ export async function load({ url }) {
             ? get_taxonomy(tab, url.searchParams.get('tax')) ?? taxonomy_list[0] ?? null
             : null;
 
-    const [archive_res, exhibition_res, lender_res, edit_archive, edit_exhibition, terms_res] = await Promise.all([
+    const edit_tax_list = view === 'edit' && edit_id ? TAXONOMIES[tab] ?? [] : [];
+
+    const [archive_res, exhibition_res, lender_res, edit_archive, edit_exhibition, terms_res, edit_tax_entries] = await Promise.all([
         api_service.archive.getAll(50),
         api_service.exhibition.getAll(50),
         api_service.lender.getAll(50),
         tab === 'archive' && (view === 'edit' || view === 'detail') && edit_id ? api_service.archive.get_by_id(edit_id) : { item: null, error: null },
         tab === 'exhibition' && (view === 'edit' || view === 'detail') && edit_id ? api_service.exhibition.get_by_id(edit_id) : { item: null, error: null },
-        active_taxonomy ? api_service.taxonomy.list(active_taxonomy.key) : { items: [], error: null }
+        active_taxonomy ? api_service.taxonomy.list(active_taxonomy.key) : { items: [], error: null },
+        Promise.all(edit_tax_list.map(async (t) => [t.key, (await api_service.taxonomy.list(t.key)).items]))
     ]);
 
     return {
@@ -49,6 +52,7 @@ export async function load({ url }) {
         edit_archive_error: edit_archive.error,
         editing_exhibition: edit_exhibition.item,
         edit_exhibition_error: edit_exhibition.error,
+        edit_taxonomy_terms: Object.fromEntries(edit_tax_entries),
         taxonomy_list,
         active_taxonomy,
         terms: terms_res.items,
