@@ -14,9 +14,26 @@ export const wpApi = axios.create({
     }
 });
 
+const parse_wp_terms = (item) => {
+    const groups = item._embedded?.['wp:term'] ?? [];
+    const by_tax = {};
+    for (const group of groups) {
+        for (const term of group ?? []) {
+            if (!term?.taxonomy) continue;
+            (by_tax[term.taxonomy] ??= []).push({
+                id: term.id,
+                name: term.name,
+                slug: term.slug
+            });
+        }
+    }
+    return by_tax;
+};
+
 export const parse_wp_post = (item) => ({
     id: item.id,
     slug: item.slug,
+    link: item.link ?? '',
     title: item.title?.rendered ?? 'Untitled',
     raw_title: item.title?.raw ?? item.title?.rendered ?? '',
     raw_content: item.content?.raw ?? item.content?.rendered ?? '',
@@ -26,7 +43,8 @@ export const parse_wp_post = (item) => ({
     featured_media: item.featured_media ?? 0,
     featured_image_url: item._embedded?.['wp:featuredmedia']?.[0]?.source_url ?? null,
     file_digital: item.meta?.file_digital ?? item.metabox?.file_digital ?? '',
-    metabox: item.metabox ?? {}
+    metabox: item.metabox ?? {},
+    taxonomies: parse_wp_terms(item)
 });
 
 async function upload_media(file) {
@@ -98,6 +116,15 @@ const create_cpt_service = (endpoint) => ({
     }
 });
 
+const parse_term = (t) => ({
+    id: t.id,
+    name: t.name,
+    slug: t.slug,
+    description: t.description ?? '',
+    count: t.count ?? 0,
+    parent: t.parent ?? 0
+});
+
 export const api_service = {
     archive: create_cpt_service('archive'),
     exhibition: create_cpt_service('exhibition'),
@@ -108,6 +135,51 @@ export const api_service = {
                 return { items: res.data, total: Number(res.headers['x-wp-total'] || res.data.length) };
             } catch (err) {
                 return { items: [], total: 0, error: err.message };
+            }
+        },
+        async update_status(id, { status, reason = '' }) {
+            if (!id || !status) return { error: 'ID dan status wajib diisi.' };
+            try {
+                await wpApi.post(`/evrocks/v1/lender/${id}`, { status, reason });
+                return { error: null };
+            } catch (err) {
+                return { error: err.response?.data?.message || err.message };
+            }
+        }
+    },
+    taxonomy: {
+        async list(tax) {
+            try {
+                const res = await wpApi.get(`/wp/v2/${tax}`, {
+                    params: { per_page: 100, hide_empty: false, orderby: 'name', order: 'asc' }
+                });
+                return { items: res.data.map(parse_term), error: null };
+            } catch (err) {
+                return { items: [], error: err.response?.data?.message || err.message };
+            }
+        },
+        async create(tax, { name, slug, description, parent }) {
+            if (!name) return { error: 'Nama term wajib diisi.' };
+            try {
+                await wpApi.post(`/wp/v2/${tax}`, {
+                    name,
+                    ...(slug && { slug }),
+                    ...(description && { description }),
+                    ...(parent && { parent })
+                });
+                return { error: null };
+            } catch (err) {
+                return { error: err.response?.data?.message || err.message };
+            }
+        },
+        async remove(tax, id) {
+            if (!id) return { error: 'ID term wajib diisi.' };
+            try {
+                // term WordPress tidak punya Trash, jadi force wajib true
+                await wpApi.delete(`/wp/v2/${tax}/${id}`, { params: { force: true } });
+                return { error: null };
+            } catch (err) {
+                return { error: err.response?.data?.message || err.message };
             }
         }
     }

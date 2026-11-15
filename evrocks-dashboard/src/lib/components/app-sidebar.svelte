@@ -58,6 +58,7 @@
 				items: [                                                                                                                                                                                                                          
                     { title: "All Exhibitions", url: "/?tab=exhibition" },
 					{ title: "Edit Exhibition", url: "/?tab=exhibition&view=edit" },
+					{ title: "Taxonomy", url: "/?tab=exhibition&view=taxonomy" },
                 ],                                                                                                                                                                                                                                
             },
             {

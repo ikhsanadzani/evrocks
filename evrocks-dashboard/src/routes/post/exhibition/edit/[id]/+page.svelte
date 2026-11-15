@@ -12,7 +12,7 @@
     <div class="flex items-center justify-between border-b pb-4">
         <div>
             <h1 class="text-xl font-semibold">Edit Exhibition #{data.exhibition.id}</h1>
-            <p class="text-xs text-muted-foreground">Slug: #{data.exhibition.slug}</p>
+            <p class="text-xs text-muted-foreground">Slug: {data.exhibition.slug}</p>
         </div>
         <Button href="/?tab=exhibition" variant="outline" size="sm">Back</Button>
     </div>
@@ -23,7 +23,7 @@
         </div>
     {/if}
 
-    <form method="POST" action="?/update_exhibition" enctype="multipart/form-data" use:enhance class="space-y-4">
+    <form method="POST" action="?/update_exhibition" enctype="multipart/form-data" use:enhance class="space-y-4 rounded-lg border bg-card p-6">
         <input type="hidden" name="id" value={data.exhibition.id} />
 
         <div class="grid w-full items-center gap-1.5">
@@ -41,7 +41,7 @@
         <div class="grid w-full items-center gap-1.5">
             <Label for="attachment_file">File Digital / Katalog Pameran</Label>
             {#if data.exhibition.file_digital}
-                <a href={data.exhibition.file_digital} target="_blank" rel="noreferrer" class="text-xs underline text-primary">
+                <a href={data.exhibition.file_digital} target="_blank" rel="noreferrer" class="text-xs underline text-primary hover:text-primary-hover">
                     Lihat File Aktif
                 </a>
             {/if}

@@ -16,9 +16,9 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
 	},
 	"devDependencies": {
-		"@dnd-kit-svelte/svelte": "^0.1.6",
-		"@dnd-kit/abstract": "^0.1.21",
-		"@dnd-kit/helpers": "^0.1.21",
+		"@dnd-kit-svelte/svelte": "^0.2.0",
+		"@dnd-kit/abstract": "^0.5.3",
+		"@dnd-kit/helpers": "^0.5.3",
 		"@fontsource-variable/jetbrains-mono": "^5.3.0",
 		"@internationalized/date": "^3.12.4",
 		"@sveltejs/adapter-auto": "^8.0.0",

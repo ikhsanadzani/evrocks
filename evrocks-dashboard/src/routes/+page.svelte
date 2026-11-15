@@ -13,10 +13,13 @@
 
 	// for page post to enable tab
 	import ArchiveView from "./post/archive/+page.svelte";
+	import ArchiveDetailView from "./post/archive/detail/[id]/+page.svelte";
 	import ArchiveEditView from "./post/archive/edit/[id]/+page.svelte";
 	import ExhibitionView from "./post/exhibition/+page.svelte";
+	import ExhibitionDetailView from "./post/exhibition/detail/[id]/+page.svelte";
 	import LenderView from "./post/lending/+page.svelte";
 	import ExhibitionEditView from "./post/exhibition/edit/[id]/+page.svelte";
+	import TaxonomyManager from "#lib/components/taxonomy-manager.svelte";
 
 	let { data, form } = $props();
 	let active_tab = $derived(page.url.searchParams.get("tab") ?? "dashboard");
@@ -43,7 +46,36 @@
 					</Tabs.Content>
 					<!-- for archive view tab -->
 					<Tabs.Content value="archive">
-						{#if active_view === "edit"}
+						{#if active_view === "taxonomy"}
+							<TaxonomyManager
+								tab="archive"
+								taxonomy_list={data.taxonomy_list}
+								active_taxonomy={data.active_taxonomy}
+								terms={data.terms}
+								terms_error={data.terms_error}
+								{form}
+							/>
+						{:else if active_view === "detail"}
+							{#if data.editing_archive}
+								<ArchiveDetailView data={{ archive: data.editing_archive }} />
+							{:else}
+								<div class="p-6 text-sm text-muted-foreground">
+									Pilih item dari daftar <strong>All Archives</strong> terlebih dahulu untuk dilihat.
+								</div>
+							{/if}
+						{:else if active_view === "detail"}
+							{#if data.editing_exhibition}
+								<ExhibitionDetailView data={{ exhibition: data.editing_exhibition }} />
+							{:else if data.edit_exhibition_error}
+								<div class="p-6 text-sm text-destructive">
+									Gagal memuat data exhibition: {data.edit_exhibition_error}
+								</div>
+							{:else}
+								<div class="p-6 text-sm text-muted-foreground">
+									Pilih pameran dari daftar <strong>All Exhibitions</strong> terlebih dahulu untuk dilihat.
+								</div>
+							{/if}
+						{:else if active_view === "edit"}
 							{#if data.editing_archive}
 								<ArchiveEditView data={{ archive: data.editing_archive }} {form} />
 							{:else}
@@ -57,7 +89,36 @@
 					</Tabs.Content>
 					<!-- for exhibition view tab -->
 					<Tabs.Content value="exhibition">
-						{#if active_view === "edit"}
+						{#if active_view === "taxonomy"}
+							<TaxonomyManager
+								tab="exhibition"
+								taxonomy_list={data.taxonomy_list}
+								active_taxonomy={data.active_taxonomy}
+								terms={data.terms}
+								terms_error={data.terms_error}
+								{form}
+							/>
+						{:else if active_view === "detail"}
+							{#if data.editing_archive}
+								<ArchiveDetailView data={{ archive: data.editing_archive }} />
+							{:else}
+								<div class="p-6 text-sm text-muted-foreground">
+									Pilih item dari daftar <strong>All Archives</strong> terlebih dahulu untuk dilihat.
+								</div>
+							{/if}
+						{:else if active_view === "detail"}
+							{#if data.editing_exhibition}
+								<ExhibitionDetailView data={{ exhibition: data.editing_exhibition }} />
+							{:else if data.edit_exhibition_error}
+								<div class="p-6 text-sm text-destructive">
+									Gagal memuat data exhibition: {data.edit_exhibition_error}
+								</div>
+							{:else}
+								<div class="p-6 text-sm text-muted-foreground">
+									Pilih pameran dari daftar <strong>All Exhibitions</strong> terlebih dahulu untuk dilihat.
+								</div>
+							{/if}
+						{:else if active_view === "edit"}
 							{#if data.editing_exhibition}
 								<ExhibitionEditView data={{ exhibition: data.editing_exhibition }} {form} />
 							{:else if data.edit_exhibition_error}
@@ -75,7 +136,7 @@
 					</Tabs.Content>
 					<!-- for lending view tab -->
 					<Tabs.Content value="lender">
-                        <LenderView data={{ loans: data.loans }} />
+                        <LenderView data={{ loans: data.loans }} {form} />
                     </Tabs.Content>
 				</Tabs.Root>
 			</div>

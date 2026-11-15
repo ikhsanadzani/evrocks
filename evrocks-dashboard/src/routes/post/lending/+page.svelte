@@ -1,6 +1,9 @@
 <script>
     // @ts-nocheck
-    let { data } = $props();
+    import { enhance } from '$app/forms';
+    import { Button } from '#lib/components/ui/button/index.ts';
+    import { Input } from '#lib/components/ui/input/index.ts';
+    let { data, form } = $props();
 </script>
 
 <div class="p-6 space-y-4">
@@ -9,33 +12,65 @@
         <span class="text-sm text-muted-foreground">Total: {data.loans?.length ?? 0} permohonan</span>
     </div>
 
+    {#if form?.error}
+        <div class="p-3 text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-md">
+            {form.error}
+        </div>
+    {/if}
+
     <div class="border rounded-md overflow-x-auto">
         <table class="w-full text-sm text-left">
             <thead class="bg-muted text-muted-foreground border-b">
                 <tr>
                     <th class="p-3 font-medium w-16">ID</th>
-                    <th class="p-3 font-medium">Title</th>
+                    <th class="p-3 font-medium">Borrower</th>
                     <th class="p-3 font-medium">Loan Purpose</th>
                     <th class="p-3 font-medium">Requested Archives</th>
                     <th class="p-3 font-medium">Duration / Exp</th>
                     <th class="p-3 font-medium">Status</th>
-                    <th class="p-3 font-medium">Remarks</th>
+                    <th class="p-3 font-medium">Remarks & Action</th>
                 </tr>
             </thead>
             <tbody class="divide-y">
                 {#each data.loans ?? [] as item (item.id)}
-                    <tr class="hover:bg-muted/50">
+                    <tr class="hover:bg-muted/50 align-top">
                         <td class="p-3 font-mono text-xs">#{item.id}</td>
-                        <td class="p-3">User #{item.user_id}</td>
+                        <td class="p-3">
+                            <div class="font-medium">{item.borrower ?? `User #${item.user_id}`}</div>
+                            {#if item.email}
+                                <div class="text-xs text-muted-foreground">{item.email}</div>
+                            {/if}
+                        </td>
                         <td class="p-3 font-medium">{item.purpose}</td>
                         <td class="p-3 text-muted-foreground whitespace-pre-line">{item.title}</td>
                         <td class="p-3 text-xs text-muted-foreground">{item.duration}</td>
                         <td class="p-3">
-                            <span class="px-2 py-0.5 text-xs rounded border uppercase font-medium">
-                                {item.status}
-                            </span>
+                            <span class="badge-status uppercase">{item.status}</span>
                         </td>
-                        <td class="p-3 text-muted-foreground">{item.reason}</td>
+                        <td class="p-3 min-w-64">
+                            <form method="POST" action="?/update_lender" use:enhance class="space-y-2">
+                                <input type="hidden" name="id" value={item.id} />
+                                <Input
+                                    name="reason"
+                                    value={item.reason === '-' ? '' : item.reason}
+                                    placeholder="Catatan arsiparis..."
+                                    class="h-8 text-xs"
+                                />
+                                <div class="flex flex-wrap gap-1.5">
+                                    <Button type="submit" name="status" value="approve" size="sm">
+                                        Approve
+                                    </Button>
+                                    <Button type="submit" name="status" value="decline" variant="outline" size="sm">
+                                        Decline
+                                    </Button>
+                                    {#if item.status !== 'pending'}
+                                        <Button type="submit" name="status" value="pending" variant="ghost" size="sm">
+                                            Pending
+                                        </Button>
+                                    {/if}
+                                </div>
+                            </form>
+                        </td>
                     </tr>
                 {:else}
                     <tr>

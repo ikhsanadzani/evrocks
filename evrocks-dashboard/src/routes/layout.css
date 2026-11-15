@@ -24,15 +24,9 @@
 	--primary-foreground: #FFFFFF;
 	--primary-hover: #A10000;
 
-	/* 30% Secondary & Muted */                                              
-	--secondary: #0B2E8D;
-	--secondary-foreground: #FFFFFF;
+	/* 30% Secondary & Muted (secondary/accent netral dipasang di atas, jangan di-override lagi) */
 	--muted: #EFEFF9;
 	--muted-foreground: #4A446E;
-
-	/* Accent / Hover / Highlight */
-	--accent: #DB000F;
-	--accent-foreground: #FFFFFF;
 
 	--destructive: #DB000F;
 	--border: #E2E0F0;
@@ -151,9 +145,11 @@
     h1, h2, h3, h4, h5, h6 {
         font-family: var(--font-heading);
     }
-	@layer components { 
-        .badge-status {
-	    @apply flex items-center justify-between border-b pb-4;
-        }
-    }
+}
+
+@layer components {
+	/* Badge status: merah Radova, teks putih */
+	.badge-status {
+		@apply inline-flex items-center rounded-full bg-primary px-3 py-1 text-sm font-medium text-primary-foreground;
+	}
 }
