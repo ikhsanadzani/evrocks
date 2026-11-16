@@ -18,7 +18,19 @@ export async function load({ url }) {
 }
 
 export const actions = {
-    create_term:
+    create_term: async ({ request }) => {
+        const form_data = await request.formData();
+        const tax = form_data.get('tax')?.toString();
+        const taxonomy = get_taxonomy(TAB, tax);
+        
+        if (!taxonomy) return fail(400, { taxonomy_error: 'Taxonomy tidak dikenal.'});
 
+        const { error } = await api_service.taxonomy.create(tax, {
+            name: form_data.get('name')?.toString().trim();
+            slug: form_data.get('slug')?.toString().trim();
+            parent: taxonomy.hierarchical ? Number(form_data.get('parent')) || 0 : 0
+        });
+        if (error) return fail(400)
+    }
     delete_term:
 }
