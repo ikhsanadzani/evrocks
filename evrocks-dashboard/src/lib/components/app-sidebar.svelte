@@ -43,46 +43,34 @@
             },
             {
                 title: "Archive",
-                url: "/?tab=archive",
+                url: "/archive",
                 icon: Archive,
 				items: [
-					{ title: "All Archives", url: "/?tab=archive" },
-					{ title: "Edit Archive", url: "/?tab=archive&view=edit" },
-					{ title: "Taxonomy", url: "/?tab=archive&view=taxonomy" },
+					{ title: "All Archives", url: "/archive" },
+					{ title: "Taxonomy", url: "/archive/taxonomy" },
 				],     
             },
             {
                 title: "Exhibition",
-                url: "/?tab=exhibition",
+                url: "/exhibition",
                 icon: FrameCorners,
 				items: [                                                                                                                                                                                                                          
-                    { title: "All Exhibitions", url: "/?tab=exhibition" },
-					{ title: "Edit Exhibition", url: "/?tab=exhibition&view=edit" },
-					{ title: "Taxonomy", url: "/?tab=exhibition&view=taxonomy" },
+                    { title: "All Exhibitions", url: "/exhibition" },
+					{ title: "Taxonomy", url: "/exhibition/taxonomy" },
                 ],                                                                                                                                                                                                                                
             },
             {
                 title: "Lender",
-                url: "/?tab=lender",
+                url: "lender",
                 icon: HandshakeIcon,
             },
         ],
 		
 		navSecondary: [
 			{
-				title: "Settings",
+				title: "User Manage",
 				url: "#",
 				icon: SettingsIcon,
-			},
-			{
-				title: "Get Help",
-				url: "#",
-				icon: HelpIcon,
-			},
-			{
-				title: "Search",
-				url: "#",
-				icon: SearchIcon,
 			},
 		],
 	};

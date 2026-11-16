@@ -17,14 +17,12 @@
 
     let { items }: { items: NavItem[] } = $props();
 
-    const is_sub_active = (url: string) =>
-        page.url.pathname + page.url.search === url;
+    const is_sub_active = (url: string) => page.url.pathname === url;
 
-    const is_parent_active = (url: string) => {
-        const current_tab = page.url.searchParams.get("tab");
-        if (url === "/") return page.url.pathname === "/" && !current_tab;
-        return current_tab === new URLSearchParams(url.split("?")[1]).get("tab");
-    };
+    const is_parent_active = (url: string) => {                           
+            if (url === "/") return page.url.pathname === "/";                
+            return page.url.pathname.startsWith(url);                         
+        };  
 </script>
 
 {#snippet button_content(item: NavItem, expandable = false)}
