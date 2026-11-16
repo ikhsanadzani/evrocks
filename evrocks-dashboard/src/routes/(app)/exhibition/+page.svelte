@@ -55,10 +55,10 @@
                 <Card.Footer class="border-t pt-3 flex items-center justify-between gap-2">
                     <span class="badge-status text-xs uppercase">{item.status}</span>
                     <div class="flex items-center gap-2 shrink-0">
-                        <Button href="/?tab=exhibition&view=detail&id={item.id}" variant="ghost" size="sm">
+                        <Button href="/exhibition/detail/{item.id}" variant="ghost" size="sm">
                             View
                         </Button>
-                        <Button href="/?tab=exhibition&view=edit&id={item.id}" variant="outline" size="sm">
+                        <Button href="/exhibition/edit/{item.id}"    variant="outline" size="sm">
                             Edit
                         </Button>
                     </div>
