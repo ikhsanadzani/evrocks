@@ -17,3 +17,8 @@ export async function load({ url }) {
     };
 }
 
+export const actions = {
+    create_term:
+
+    delete_term:
+}
