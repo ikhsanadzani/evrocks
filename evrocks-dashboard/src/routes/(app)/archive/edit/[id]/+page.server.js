@@ -1,37 +1,26 @@
 // @ts-nocheck
 import { error, fail, redirect } from "@sveltejs/kit";
 import { api_service } from "#lib/api.js";
+import { TAXONOMIES } from "#lib/taxonomies.js";
 
-export async function load({params}) {
-const { item, error: api_error } = await api_service.archive.get_by_id(params.id);    
-    if (!item) {
-    throw error(404, api_error || 'Archive tidak ditemukan');
-}
+export async function load ({params}) {
+    const { item, error: err } = await api_service.archive.get_by_id(params.id);
+    if ( !item ) throw error(404, err || 'Archive Not Found');
 
-    return { archive: item };
+    const taxonomy_terms = {};
+    for (const tax of TAXONOMIES.archive) {
+        const res = await api_service.taxonomy.list(tax.key);
+        taxonomy_terms[tax.key] = res.items;
+    }
+
+    return { archive: item, taxonomy_terms };
 }
 
 export const actions = {
-    default: async ({ request, params }) => {
+    update_archive: async ({ request, params }) => {
         const form_data = await request.formData();
-        const title = form_data.get('title')?.toString().trim();
-        const content = form_data.get('content')?.toString() ?? '';
-        const status = form_data.get('status')?.toString() ?? 'publish';
-
-        if (!title) {
-            return fail(400, { error: 'Judul arsip wajib diisi.' });
-        }
-
-        const { error: update_error } = await api_service.archive.update(params.id, {
-            title,
-            content,
-            status
-        });
-
-        if (update_error) {
-            return fail(500, { error: update_error });
-        }
-
-        throw redirect(303, '/?tab=archive');
+        const { error: err } = await api_service.archive.get_by_id(params.id, form_data);
+        if (err) return fail(400, { error: err });
+        throw redirect(303, '/archive');
     }
 };
