@@ -4,6 +4,8 @@ import { fail, redirect } from '@sveltejs/kit';
 import { api_service } from '#lib/api.js';
 import { TAXONOMIES, get_taxonomy } from '#lib/taxonomies.js';
 
+const TAB = 'archive';
+
 export async function load({ url }) {
     const taxonomy_list = TAXONOMIES[TAB];
         const active_taxonomy = get_taxonomy(TAB, url.searchParams.get('tax')) ?? taxonomy_list[0] ?? null;
