@@ -73,10 +73,14 @@
 					</DropdownMenu.Item>
 				</DropdownMenu.Group>
 				<DropdownMenu.Separator />
-				<DropdownMenu.Item>
-					<LogoutIcon />
-					Log out
-				</DropdownMenu.Item>
+					<form method="POST" action="/login?/logout">                                                                                                                  
+						<button type="submit" class="w-full">                                                                                                                        
+							<DropdownMenu.Item>
+								<LogoutIcon />
+								Log out
+							</DropdownMenu.Item>
+						</button>
+					</form>
 			</DropdownMenu.Content>
 		</DropdownMenu.Root>
 	</Sidebar.MenuItem>

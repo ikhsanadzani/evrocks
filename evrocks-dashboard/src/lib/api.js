@@ -197,37 +197,17 @@ export const api_service = {
     }
 };
 
- export function login(username, password) {
-        if (!username || !password) return { token: null, user: null, error:  
-        'Username dan password wajib diisi.' };
-        return run(async () => {
-            const baseURL = wpApi.defaults.baseURL;
-            const { data } = await axios.post(`${baseURL}/jwt-auth/v1/token`, 
-            { username, password });
-            const me = await axios.get(`${baseURL}/wp/v2/users/me`, {  params: { context: 'edit' }, headers: { Authorization: `Bearer ${data.token}` }            
-            });
-            return {
-                token: data.token,
-                user: {
-                    id: me.data.id,
-                    name: me.data.name,
-                    email: me.data.email ?? '',
-                    role: me.data.roles?.[0] ?? 'subscriber'
-                }
-            };
-        }, { token: null, user: null });
-    }
 
 
 export async function login(username, password) {
     if (!username || !password) {
-        return {token: null, username: null, error: 'Username and Password requiered' };
+        return {token: null, user: null, error: 'Username and Password requiered' };
     }
 
     try {
         const baseURL = wpApi.defaults.baseURL;
-        const { data } = await axios.post('${baseURL}/jwt-auth/v1/token', {username, password});
-        const me = await axios.get('${baseURL}/wp/v2/users/me?context=edit', {headers: {Authorization: 'Bearer ${data.token}'}});
+        const { data } = await axios.post(`${baseURL}/jwt-auth/v1/token`, {username, password});
+        const me = await axios.get(`${baseURL}/wp/v2/users/me?context=edit`, {headers: {Authorization: 'Bearer ${data.token}'}});
 
         return{
             token: data.token,
@@ -235,7 +215,7 @@ export async function login(username, password) {
                 id: me.data.id,
                 name: me.data.name,
                 email: me.data.email ?? '',
-                role: me.data.role?.[0] ?? 'subscriber'
+                role: me.data.roles?.[0] ?? 'subscriber'
             },
             error: null
         

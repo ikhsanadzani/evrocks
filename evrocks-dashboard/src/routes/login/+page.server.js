@@ -8,11 +8,9 @@ export const actions = {
         const password = form_data.get('password')?.toString();
 
         const { token, user, error } = await login(username, password);
-        if (error || !token || !user) return fail(401, { error: error || 'login failed' }); {
-            
-        }
+        if (error || !token || !user) return fail(401, { error: error || 'login failed' }); 
 
-        cookies.set('evrocks_session', JSON.stringify({ token, password }), {
+        cookies.set('evrocks_session', JSON.stringify({ token, user }), {
             path:'/',
             maxAge: 60 * 60 * 24 * 7
         });
