@@ -1,4 +1,5 @@
 <script lang="ts">
+	// @ts-nocheck
 	// for icon
 	import CameraIcon from "@tabler/icons-svelte/icons/camera";
 	import ChartBarIcon from "@tabler/icons-svelte/icons/chart-bar";
@@ -28,6 +29,7 @@
 	import NavUser from "./nav-user.svelte";
 	import type { ComponentProps } from "svelte";
 	import logo from "#lib/assets/logo.png";
+	import { page } from '$app/state';
 
 	const data = {
 		user: {
@@ -76,6 +78,16 @@
 	};
 
 
+	const ROLE_LABELS = { administrator: "Admin", editor: "Arsiparis", subscriber: "User" };
+    let session_user = $derived(page.data?.user);
+    let role = $derived(session_user?.role ?? "subscriber");
+  
+    let display_user = $derived({
+        name: session_user?.name || "Guest",                                                                                                                         
+        email: `${ROLE_LABELS[role] ?? role}${session_user?.email ? ` · ${session_user.email}` : ""}`,
+        avatar: "/avatars/shadcn.jpg",
+    });
+
 	let { ...restProps }: ComponentProps<typeof Sidebar.Root> = $props();
 </script>
 
@@ -102,6 +114,6 @@
 
 		
         <Sidebar.Footer>
-            <NavUser user={data.user} />
+            <NavUser user={display_user} />
         </Sidebar.Footer>
     </Sidebar.Root>

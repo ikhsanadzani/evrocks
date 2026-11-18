@@ -13,7 +13,7 @@
   
         const is_login = event.url.pathname === '/login';
         if (!event.locals.user && !is_login) throw redirect(303, '/login');
-        if (event.locals.user && is_login) throw redirect(303, '/');                                                                                              
+        if (event.locals.user && is_login && event.request.method === 'GET') throw redirect(303, '/');                                                                                              
                                                                                                                                                                   
         return resolve(event);
     }

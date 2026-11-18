@@ -22,7 +22,7 @@
             </div>                                                                                                                                            
         {/if}                                                                                                                                                 
                                                                                                                                                                 
-        <form method="POST" use:enhance class="space-y-4">                                                                                                    
+        <form method="POST" action="?/login" use:enhance class="space-y-4">                                                                                                    
             <div class="space-y-1.5">                                                                                                                         
                 <Label for="username">Username</Label>                                                                                                        
                 <Input id="username" name="username" required autocomplete="username" />                                                                      

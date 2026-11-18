@@ -11,6 +11,7 @@
 	let { user }: { user: { name: string; email: string; avatar: string } } = $props();
 
 	const sidebar = Sidebar.useSidebar();
+	let logout_form: HTMLFormElement | undefined = $state();
 </script>
 
 <Sidebar.Menu>
@@ -73,15 +74,13 @@
 					</DropdownMenu.Item>
 				</DropdownMenu.Group>
 				<DropdownMenu.Separator />
-					<form method="POST" action="/login?/logout">                                                                                                                  
-						<button type="submit" class="w-full">                                                                                                                        
-							<DropdownMenu.Item>
-								<LogoutIcon />
-								Log out
-							</DropdownMenu.Item>
-						</button>
-					</form>
+				<DropdownMenu.Item onSelect={() => logout_form?.requestSubmit()}>
+					<LogoutIcon />
+					Log out
+				</DropdownMenu.Item>
 			</DropdownMenu.Content>
 		</DropdownMenu.Root>
 	</Sidebar.MenuItem>
 </Sidebar.Menu>
+
+<form bind:this={logout_form} method="POST" action="/login?/logout" class="hidden"></form>

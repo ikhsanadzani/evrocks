@@ -207,7 +207,7 @@ export async function login(username, password) {
     try {
         const baseURL = wpApi.defaults.baseURL;
         const { data } = await axios.post(`${baseURL}/jwt-auth/v1/token`, {username, password});
-        const me = await axios.get(`${baseURL}/wp/v2/users/me?context=edit`, {headers: {Authorization: 'Bearer ${data.token}'}});
+        const me = await axios.get(`${baseURL}/wp/v2/users/me?context=edit`, {headers: {Authorization: `Bearer ${data.token}`}});
 
         return{
             token: data.token,

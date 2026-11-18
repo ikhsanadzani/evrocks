@@ -2,7 +2,7 @@ import { fail, redirect } from "@sveltejs/kit";
 import  { login } from "#lib/api.js";
 
 export const actions = {
-    default: async ({ request, cookies }) => {
+    login: async ({ request, cookies }) => {
         const form_data = await request.formData();
         const username = form_data.get('username')?.toString().trim();
         const password = form_data.get('password')?.toString();
