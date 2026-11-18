@@ -11,5 +11,16 @@ export const actions = {
         if (error || !token || !user) return fail(401, { error: error || 'login failed' }); {
             
         }
+
+        cookies.set('evrocks_session', JSON.stringify({ token, password }), {
+            path:'/',
+            maxAge: 60 * 60 * 24 * 7
+        });
+
+        throw redirect(303, '/');
+    },
+    logout: async({ cookies }) => {
+        cookies.delete('evrocks_session', {path: '/'});
+        throw redirect(303, '/login');
     }
-}
+};
