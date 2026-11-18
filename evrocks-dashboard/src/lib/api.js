@@ -1,7 +1,6 @@
 // @ts-nocheck
 import axios from 'axios';
 import { TAXONOMIES } from '#lib/taxonomies.js';
-import { email } from 'zod';
 
 try { process.loadEnvFile(); } catch {}
 
@@ -11,26 +10,6 @@ export const wpApi = axios.create({
     auth: { username: process.env.WP_USER, password: process.env.WP_APP_PASSWORD }
 });
 
-// export function login(username, password) {
-//     if (!username || !password) return { token: null, user: null, error: 'Username dan password wajib diisi.' };
-//     return run(async () => {                                                                                                                                  
-//         const baseURL = wpApi.defaults.baseURL;                                                                                                               
-//         const { data } = await axios.post(`${baseURL}/jwt-auth/v1/token`, { username, password });
-//         const me = await axios.get(`${baseURL}/wp/v2/users/me`, {
-//             params: { context: 'edit' },
-//             headers: { Authorization: `Bearer ${data.token}` }                                                                                                
-//         });                                                                                                                                                   
-//         return {                                                                                                                                              
-//             token: data.token,                                                                                                                                
-//             user: {                                                                                                                                           
-//                 id: me.data.id,                                                                                                                               
-//                 name: me.data.name,                                                                                                                           
-//                 email: me.data.email ?? '',                                                                                                                   
-//                 role: me.data.roles?.[0] ?? 'subscriber'                                                                                                      
-//             }                                                                                                                                                 
-//         };                                                                                                                                                    
-//     }, { token: null, user: null });                                                                                                                          
-// }
 
 async function run(fn, fallback = {}) {
     try {
@@ -238,3 +217,34 @@ export const api_service = {
             };
         }, { token: null, user: null });
     }
+
+
+export async function login(username, password) {
+    if (!username || !password) {
+        return {token: null, username: null, error: 'Username and Password requiered' };
+    }
+
+    try {
+        const baseURL = wpApi.defaults.baseURL;
+        const { data } = await axios.post('${baseURL}/jwt-auth/v1/token', {username, password});
+        const me = await axios.get('${baseURL}/wp/v2/users/me?context=edit', {headers: {Authorization: 'Bearer ${data.token}'}});
+
+        return{
+            token: data.token,
+            user: {
+                id: me.data.id,
+                name: me.data.name,
+                email: me.data.email ?? '',
+                role: me.data.role?.[0] ?? 'subscriber'
+            },
+            error: null
+        
+        };
+    } catch (err) {
+        return {
+            token: null,
+            user: null,
+            error: err.response?.data?.message || err.message
+        };
+    }
+}
