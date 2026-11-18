@@ -12,17 +12,17 @@
 
     const meta_fields = [
         ['Reference Code', 'code'],
-        ['Classification Code', 'classification_code'],
-        ['File / Item Number', 'file_number'],
-        ['Archive Year', 'archive_year'],
         ['Physical Extent', 'volume'],
-        ['Processing Unit', 'processing_unit'],
+        ['Archive Year', 'archive_year'],
         ['Access Status', 'access_status'],
-        ['Physical Condition', 'physical_condition'],
-        ['Active Retention', 'active_retention'],
-        ['Inactive Retention', 'inactive_retention'],
         ['Final Disposition', 'follow_up'],
+        ['File / Item Number', 'file_number'],
+        ['Processing Unit', 'processing_unit'],
         ['Subject (Dublin Core)', 'dc_subject'],
+        ['Active Retention', 'active_retention'],
+        ['Physical Condition', 'physical_condition'],
+        ['Inactive Retention', 'inactive_retention'],
+        ['Classification Code', 'classification_code'],
         ['Contributor (Dublin Core)', 'dc_contributor']
     ];
 
@@ -92,11 +92,7 @@
         </Card.Header>
         <Card.Content class="space-y-4 pt-4">
             {#if archive.featured_image_url}
-                <img
-                    src={archive.featured_image_url}
-                    alt={archive.raw_title}
-                    class="w-full max-h-96 rounded-md border object-cover"
-                />
+                <img src={archive.featured_image_url} alt={archive.raw_title} class="w-full max-h-96 rounded-md border object-cover"/>
             {/if}
 
             {#each files as file (file.id)}

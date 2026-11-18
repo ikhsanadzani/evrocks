@@ -83,7 +83,7 @@
         <Sidebar.Header>
             <Sidebar.Menu>
                 <Sidebar.MenuItem>
-                    <Sidebar.MenuButton class="data-[slot=sidebar-menu-button]:!p-1.5">
+                    <Sidebar.MenuButton class="data-[slot=sidebar-menu-button]:p-1.5!">
     			{#snippet child({ props })}
                             <a href="/" {...props}>
     				<img src={ logo } alt="Radova" class="size-5" />

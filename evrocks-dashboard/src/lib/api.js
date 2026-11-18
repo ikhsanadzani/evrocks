@@ -11,6 +11,27 @@ export const wpApi = axios.create({
     auth: { username: process.env.WP_USER, password: process.env.WP_APP_PASSWORD }
 });
 
+// export function login(username, password) {
+//     if (!username || !password) return { token: null, user: null, error: 'Username dan password wajib diisi.' };
+//     return run(async () => {                                                                                                                                  
+//         const baseURL = wpApi.defaults.baseURL;                                                                                                               
+//         const { data } = await axios.post(`${baseURL}/jwt-auth/v1/token`, { username, password });
+//         const me = await axios.get(`${baseURL}/wp/v2/users/me`, {
+//             params: { context: 'edit' },
+//             headers: { Authorization: `Bearer ${data.token}` }                                                                                                
+//         });                                                                                                                                                   
+//         return {                                                                                                                                              
+//             token: data.token,                                                                                                                                
+//             user: {                                                                                                                                           
+//                 id: me.data.id,                                                                                                                               
+//                 name: me.data.name,                                                                                                                           
+//                 email: me.data.email ?? '',                                                                                                                   
+//                 role: me.data.roles?.[0] ?? 'subscriber'                                                                                                      
+//             }                                                                                                                                                 
+//         };                                                                                                                                                    
+//     }, { token: null, user: null });                                                                                                                          
+// }
+
 async function run(fn, fallback = {}) {
     try {
         return { error: null, ...(await fn()) };
@@ -131,11 +152,7 @@ const create_cpt_service = (endpoint) => ({
         const payload = {
             title,
             content: form_data.get('content')?.toString() ?? '',
-            status: form_data.get('status')?.toString() ?? 'publish',
-            ...tax_payload,
-            ...(Object.keys(metabox).length > 0 && { metabox }),
-            ...(img_res.data && { featured_media: img_res.data.id }),
-            ...(doc_res.data && { meta: { file_digital: doc_res.data.url } })
+            status: form_data.get('status')?.toString() ?? 'publish', ...tax_payload, ...(Object.keys(metabox).length > 0 && { metabox }), ...(img_res.data && { featured_media: img_res.data.id }), ...(doc_res.data && { meta: { file_digital: doc_res.data.url } })
         };
 
         return run(async () => {
