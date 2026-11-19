@@ -14,11 +14,11 @@
     // 4. .trim() → Buang spasi sisa di awal dan ujung kalimat.
 </script>
 
-<div class="max-w-6xl mx-auto w-full p-6 space-y-6">
-    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b pb-4">
-        <div>
+  <div>
             <h1 class="text-2xl font-semibold tracking-tight">Catalog Archives</h1>
             <p class="text-sm text-muted-foreground">Display {data.archives.length} published archives</p>
+      <div class="max-w-6xl mx-auto w-full p-6 space-y-6">
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b pb-4">
         </div>
 
         <form method="GET" class="flex items-center gap-2 w-full sm:w-auto">

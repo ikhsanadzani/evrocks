@@ -1,6 +1,13 @@
 <script>
-        // @ts-nocheck                                                                                           
+        // @ts-nocheck
+        import * as Card from '#lib/components/ui/card/index.js';
+        import { Badge } from '#lib/components/ui/badge/index.js';
+        import { Button } from '#lib/components/ui/button/index.ts';
+        import { Input } from '#lib/components/ui/input/index.ts';                                                                                           
         let { data } = $props();
+
+        const strip_html = (html) => (html ?? '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+
 </script>
 
 <div class="p-6 space-y-4">
