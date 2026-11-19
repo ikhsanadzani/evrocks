@@ -53,8 +53,29 @@
                                 </div>
                         {/if}
                     </div>
+
+                    <Card.Header class="space-y-1.5 pt-4">
+                        <div class="flex item-center gap-2 flex-wrap">
+                            {#if item.metabox?.code}                                                         
+                                    <Badge variant="outline" class="font-mono                                    
+                                    text-[11px]">{item.metabox.code}</Badge>                                     
+                                {/if}                                                                            
+                                {#if item.metabox?.archive_year}                                                 
+                                    <Badge variant="secondary"                                                   
+                                    class="text-[11px]">{item.metabox.archive_year}</Badge>                      
+                                {/if}  
+                        </div>
+                        <Card.Title class="text-base leading-snug group-hover:underline">                    
+                                {@html item.title}                                                               
+                        </Card.Title>
+                    </Card.Header>
+
                 </Card.Root>
             </a>
+            {:else}
+                <div class="col-span-full p-10">
+                    No matching records were found.
+                </div>
         {/each}
     </div>
 </div>
