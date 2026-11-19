@@ -10,20 +10,68 @@
 
 </script>
 
-<div class="p-6 space-y-4">
-    <h1>Pameran Virtual ({data.exhibitions.length})</h1>
+ <div>
+            <h1 class="text-2xl font-semibold tracking-tight">Catalog exhibitions</h1>
+            <p class="text-sm text-muted-foreground">Display {data.exhibitions.length} published exhibitions</p>
+      <div class="max-w-6xl mx-auto w-full p-6 space-y-6">
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b pb-4">
+        </div>
+
+        <form method="GET" class="flex items-center gap-2 w-full sm:w-auto">
+            <Input name="q" value={data.q} placeholder="Search for a title or exhibition code..." class="sm:w-64 h-9" />
+            <Button type="submit" size="sm" class="h-9">Searching</Button>
+            {#if data.q}
+                <Button href="/explore/exhibition" variant="ghost" size="sm" class="h-9">Reset</Button>         
+            {/if}
+        </form>
+    </div>
 
     {#if data.error}
-        <p>{data.error}</p>                                                                                  
+        <div class="p-3 text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-md"> 
+            Failed to load the exhibition catalog: {data.error}
+        </div>
     {/if}
 
-    <ul>
-        {#each data.exhibitions as item (item.id)}
-            <li>
-                <a href="/explore/exhibition/{item.id}">{@html item.title}</a>
-            </li>
-        {:else}
-            <li>Belum ada pameran virtual terpublikasi.</li>
+    <div class="grid grid-cols-1 md:grid-cols2 lg:grid-cols3 gap-5">
+        {#each data.exhibitions as item (item.id) }
+            <a href="/explore/exhibition/{item.id}" class="group block">
+                <Card.Root class="h-full flex flex-col overflow-hidden pt-0 transition-shadow group-hover:shadow-md">
+                    <div class="aspect-video w-full bg-muted overflow-hidden border-b">
+                        {#if item.featured_image_url}
+                            <img 
+                            src={item.featured_image_url} 
+                            alt={strip_html(item.title)}
+                            class="w-full h-full object-cover transition-transform dration-300 group-hover:scale-150"
+                            />
+                            {:else}
+                                <div class="w-ful h-full object-cover item-center justify-center text-xs text-muted-foreground">
+                                    No Preview
+                                </div>
+                        {/if}
+                    </div>
+
+                    <Card.Header class="space-y-1.5 pt-4">
+                        <div class="flex item-center gap-2 flex-wrap">
+                            {#if item.metabox?.code}                                                         
+                                    <Badge variant="outline" class="font-mono                                    
+                                    text-[11px]">{item.metabox.code}</Badge>                                     
+                                {/if}                                                                            
+                                {#if item.metabox?.exhibition_year}                                                 
+                                    <Badge variant="secondary"                                                   
+                                    class="text-[11px]">{item.metabox.exhibition_year}</Badge>                      
+                                {/if}  
+                        </div>
+                        <Card.Title class="text-base leading-snug group-hover:underline">                    
+                                {@html item.title}                                                               
+                        </Card.Title>
+                    </Card.Header>
+
+                </Card.Root>
+            </a>
+            {:else}
+                <div class="col-span-full p-10">
+                    No matching records were found.
+                </div>
         {/each}
-    </ul>
+    </div>
 </div>
