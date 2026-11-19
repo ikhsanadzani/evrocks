@@ -210,6 +210,18 @@ export const api_service = {
             });
         },
 
+        update: (tax, id, { name, slug, description, parent }) => {
+            if (!id || !name) return { error: 'ID dan Nama term wajib diisi.' };
+            return run(async () => {
+                await wpApi.post(`/wp/v2/${tax}`, {
+                    name,
+                    ...(slug && { slug }),
+                    ...(description && { description }),
+                    ...(parent && { parent })
+                });
+            });
+        },
+
         remove: (tax, id) => {
             if (!id) return { error: 'ID term wajib diisi.' };
             // term WordPress tidak punya Trash, jadi force wajib true
