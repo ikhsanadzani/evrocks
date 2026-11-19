@@ -71,7 +71,7 @@
 		navSecondary: [
 			{
 				title: "User Manage",
-				url: "#",
+				url: "/users",
 				icon: SettingsIcon,
 			},
 		],
@@ -109,7 +109,9 @@
   
         <Sidebar.Content>
             <NavMain items={data.navMain} />
-			<NavSecondary items={data.navSecondary} />
+			{#if role === "administrator"}
+        <NavSecondary items={data.navSecondary} />
+    {/if}
         </Sidebar.Content>
 
 		

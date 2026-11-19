@@ -194,6 +194,23 @@ export const api_service = {
                 await wpApi.delete(`/wp/v2/${tax}/${id}`, { params: { force: true } });
             });
         }
+    },
+    users: {
+        list: () => run(async () => {
+            const res = await wpApi.get('/wp/v2/users?context=edit&per_page=100');
+            return {
+                items: res.data.map((u) => ({
+                    id: u.id,
+                    username: u.slug,
+                    name: u.name,
+                    email: u.email ?? '',
+                    role: u.roles?.[0] ?? 'subscriber'
+                }))
+            };
+        }, { items: [] }),
+        create: (payload) => run(() => wpApi.post('/wp/v2/users', payload)),
+        update_role: (id, role) => run(() => wpApi.post(`/wp/v2/users/${id}`, { roles: [role] })),
+        remove: (id, reassign) => run(() => wpApi.delete(`/wp/v2/users/${id}`, { params: { force: true, reassign } }))
     }
 };
 
