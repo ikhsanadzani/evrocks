@@ -184,10 +184,16 @@ export const api_service = {
         }
     },
     taxonomy: {
-        list: (tax) =>
+        list: (tax, { page = 1, per_page = 20 } = {}) =>
             run(async () => {
                 const res = await wpApi.get(`/wp/v2/${tax}`, {
-                    params: { per_page: 100, hide_empty: false, orderby: 'name', order: 'asc' }
+                    params: { 
+                        per_page: 100, 
+                        hide_empty: false, 
+                        orderby: 'name', 
+                        order: 'asc',
+                        _fields: 'id,name,slug,description,parent,count' 
+                    }
                 });
                 return { items: res.data.map(parse_term) };
             }, { items: [] }),
