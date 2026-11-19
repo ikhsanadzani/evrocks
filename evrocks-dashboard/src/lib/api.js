@@ -220,9 +220,9 @@ export const api_service = {
             return run(async () => {
                 await wpApi.post(`/wp/v2/${tax}`, {
                     name,
-                    ...(slug && { slug }),
-                    ...(description && { description }),
-                    ...(parent && { parent })
+                    ...(slug !== undefined && { slug }),
+                    ...(description !== undefined && { description }),
+                    ...(parent !== undefined && { parent })
                 });
             });
         },
