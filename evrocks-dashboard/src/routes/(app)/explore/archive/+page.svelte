@@ -28,4 +28,18 @@
             {/if}
         </form>
     </div>
+
+    {#if data.error}
+        <div class="p-3 text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-md"> 
+            Failed to load the archive catalog: {data.error}
+        </div>
+    {/if}
+
+    <div class="grid grid-cols-1 md:grid-cols2 lg:grid-cols3 gap-6">
+        {#each data.archives as item (item.id) }
+            <a href="/explore/archive/{item.id}" class="group block">
+                
+            </a>
+        {/each}
+    </div>
 </div>
