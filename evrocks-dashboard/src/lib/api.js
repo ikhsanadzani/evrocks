@@ -195,8 +195,13 @@ export const api_service = {
                         _fields: 'id,name,slug,description,parent,count' 
                     }
                 });
-                return { items: res.data.map(parse_term) };
-            }, { items: [] }),
+                return { 
+                    items: res.data.map(parse_term),
+                    total: Number(res.headers['x-wp-total']?? 1),
+                    total_page: Number(res.headers['x-wp-totalpages']?? 1),
+                    page
+                 };
+            }, { items: [], total: 0, total_page: 1, page }),
 
         create: (tax, { name, slug, description, parent }) => {
             if (!name) return { error: 'Nama term wajib diisi.' };
