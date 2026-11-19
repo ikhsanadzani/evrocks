@@ -86,6 +86,7 @@
 	const subscriber_nav = [
 		{title: "Peminjaman & Profile", url: "/", icon: HandshakeIcon},
 		{ title: "Katalog Arsip", url: "/explore/archive", icon: Archive },
+		{ title: "Pameran Virtual", url: "/explore/exhibition", icon: FrameCorners },
 	]
   
     let display_user = $derived({
