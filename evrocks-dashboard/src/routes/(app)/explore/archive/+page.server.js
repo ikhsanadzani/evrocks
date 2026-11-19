@@ -14,5 +14,5 @@ export async function load() {
             (item.title ?? '').toLowerCase().includes(q) || (item.metabox?.code ?? '').toLowerCase().includes(q)
         );
     }
-    return {archives, error: res.error};
+    return {archives, q, error: res.error};
 }
