@@ -20,7 +20,7 @@
     <div class="flex flex-wrap gap-2">
         {#each taxonomy_list as t (t.key)}
             <Button
-                href="/?tab={tab}&view=taxonomy&tax={t.key}"
+                href="/{tab}/taxonomy?tax={t.key}"
                 size="sm"
                 variant={t.key === active_taxonomy?.key ? 'default' : 'outline'}
             >
