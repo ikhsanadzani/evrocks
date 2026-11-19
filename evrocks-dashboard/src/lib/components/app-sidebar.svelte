@@ -63,7 +63,7 @@
             },
             {
                 title: "Lender",
-                url: "lender",
+                url: "/lender",
                 icon: HandshakeIcon,
             },
         ],
@@ -81,6 +81,11 @@
 	const ROLE_LABELS = { administrator: "Admin", editor: "Arsiparis", subscriber: "User" };
     let session_user = $derived(page.data?.user);
     let role = $derived(session_user?.role ?? "subscriber");
+	let is_staff = $derived(role === "administrator" || role === "editor");
+
+	const subscriber_nav = [
+		{title: "Peminjaman & Profile", url: "/", icon: HandshakeIcon},
+	]
   
     let display_user = $derived({
         name: session_user?.name || "Guest",                                                                                                                         
@@ -107,12 +112,16 @@
             </Sidebar.Menu>
         </Sidebar.Header>
   
-        <Sidebar.Content>
-            <NavMain items={data.navMain} />
-			{#if role === "administrator"}
-        <NavSecondary items={data.navSecondary} />
-    {/if}
-        </Sidebar.Content>
+       <Sidebar.Content>
+                {#if is_staff}
+                    <NavMain items={data.navMain} />
+                {:else}
+                    <NavMain items={subscriber_nav} />
+                {/if}
+                {#if role === "administrator"}
+                    <NavSecondary items={data.navSecondary} />
+                {/if}
+            </Sidebar.Content>
 
 		
         <Sidebar.Footer>

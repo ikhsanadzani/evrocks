@@ -15,10 +15,10 @@ export async function handle({event, resolve}) {
     }
 
     const {pathname} = event.url;
-    const is_login = path === '/login';
+    const is_login = pathname === '/login';
 
     if (!event.locals.user && !is_login) redirect(303, '/login');
-    if (event.locals.user && is_login && event.reques.method === 'GET' ) redirect(303, '/');
+    if (event.locals.user && is_login && event.request.method === 'GET' ) redirect(303, '/');
 
     const role = event.locals.user?.role;
     if (pathname.startsWith('/user') && role !== 'administrator') {

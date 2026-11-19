@@ -16,3 +16,13 @@ export async function load({ locals }) {
 
     return { loans: my_loans };
 }
+
+//  • Dasarnya: SvelteKit Docs — Loading data (+page.server.js) https://svelte.dev/docs/kit/load#Page-data:        
+//     export async function load({ locals }) {                                                                     
+//         return { ... };                                                                                          
+//     }                                                                                                            
+                                                                                                                 
+//   • Yang diubah: Menggunakan locals.user (yang sudah diisi hooks.server.js) untuk mengecek is_staff, lalu        
+//   memfilter res.items berdasarkan user.id / user.email khusus untuk subscriber.                                  
+//   • Alasannya: Pemfilteran dilakukan di server, sehingga data peminjaman milik user lain tidak pernah dikirim ke 
+//   browser subscriber.  
