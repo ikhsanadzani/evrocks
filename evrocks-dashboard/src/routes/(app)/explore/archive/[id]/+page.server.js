@@ -4,7 +4,7 @@ import { api_service } from "#lib/api.js";
 export async function load({params}) {
     const {item, error: err} = await api_service.archive.get_by_id(params.id);
 
-    if (!item || item.status !=='publis') {
+    if (!item || item.status !=='publish') {
         error(404, err || 'Archive not found');
     }
 
