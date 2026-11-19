@@ -1,10 +1,12 @@
 <script>
-// ts-nocheck
+// @ts-nocheck
     import * as Card from '#lib/components/ui/card/index.js';
     import { Badge } from '#lib/components/ui/badge/index.js';
     import { Button } from '#lib/components/ui/button/index.ts';
     import { Input } from '#lib/components/ui/input/index.ts';
     let {data} = $props();
+
+    const strip_html = (html) => (html ?? '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
     // const strip_html = (html) => (html ?? '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
     // 1. (html ?? '') → Pengaman kalau html kosong (null/undefined), ganti jadi string kosong ''.
     // 2. .replace(/<[^>]*>/g, ' ') → Hapus semua tag HTML (<p>, </p>, <b>, dll) dan ganti jadi spasi.
@@ -34,11 +36,21 @@
         </div>
     {/if}
 
-    <div class="grid grid-cols-1 md:grid-cols2 lg:grid-cols3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols2 lg:grid-cols3 gap-5">
         {#each data.archives as item (item.id) }
             <a href="/explore/archive/{item.id}" class="group block">
-                <Card.Root>
-                    
+                <Card.Root class="h-full flex flex-col overflow-hidden pt-0 transition-shadow group-hover:shadow-md">
+                    <div class="aspect-video w-full bg-muted overflow-hidden border-b">
+                        {#if item.featured_image_url}
+                            <img 
+                            src={item.featured_image_url} 
+                            alt={strip_html(item.title)}
+                            class="w-full h-full object-cover transition-transform dration-300 group-hover:scale-150"
+                            />
+                            {:else}
+                                <div class="w-ful h-full object-cover item-center justify-center text-xs text-muted-foreground"></div>
+                        {/if}
+                    </div>
                 </Card.Root>
             </a>
         {/each}
