@@ -48,7 +48,9 @@
                             class="w-full h-full object-cover transition-transform dration-300 group-hover:scale-150"
                             />
                             {:else}
-                                <div class="w-ful h-full object-cover item-center justify-center text-xs text-muted-foreground"></div>
+                                <div class="w-ful h-full object-cover item-center justify-center text-xs text-muted-foreground">
+                                    No Preview
+                                </div>
                         {/if}
                     </div>
                 </Card.Root>
