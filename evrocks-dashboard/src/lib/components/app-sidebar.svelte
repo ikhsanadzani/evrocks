@@ -85,6 +85,7 @@
 
 	const subscriber_nav = [
 		{title: "Peminjaman & Profile", url: "/", icon: HandshakeIcon},
+		{ title: "Katalog Arsip", url: "/explore/archive", icon: Archive },
 	]
   
     let display_user = $derived({
