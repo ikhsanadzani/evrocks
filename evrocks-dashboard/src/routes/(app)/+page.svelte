@@ -1,12 +1,16 @@
-<script>                                                                                                     
-	// @ts-nocheck                                                                                              
-	import ChartAreaInteractive from "#lib/components/chart-area-interactive.svelte";                           
-	import DataTable from "#lib/components/data-table.svelte";                                                  
-	import SectionCards from "#lib/components/section-cards.svelte";                                            
-	import dummy_data from "./data.js";                                                                         
-																												
-	let { data } = $props();                                                                                    
-	let is_staff = $derived(data.user?.role === "administrator" || data.user?.role === "editor");               
+<script>
+	// @ts-nocheck
+	import { enhance } from "$app/forms";
+	import { Button } from "#lib/components/ui/button/index.ts";
+	import { Input } from "#lib/components/ui/input/index.ts";
+	import { Label } from "#lib/components/ui/label/index.ts";
+	import ChartAreaInteractive from "#lib/components/chart-area-interactive.svelte";
+	import DataTable from "#lib/components/data-table.svelte";
+	import SectionCards from "#lib/components/section-cards.svelte";
+	import dummy_data from "./data.js";
+
+	let { data, form } = $props();
+	let is_staff = $derived(data.user?.role === "administrator" || data.user?.role === "editor");
 </script>                                                                                                    
 																												
 {#if is_staff}                                                                                               
@@ -19,11 +23,39 @@
 	</div>                                                                                                      
 {:else}                                                                                                      
 	<div class="p-6 space-y-6">                                                                                 
-		<div class="border rounded-md p-4 space-y-1">                                                               
-			<h1 class="text-lg font-semibold">{data.user?.name || "User"}</h1>                                          
-			<p class="text-sm text-muted-foreground">{data.user?.email || "-"}</p>                                      
-		</div>                                                                                                      
-																												
+		<div class="border rounded-md p-4 space-y-1">
+			<h1 class="text-lg font-semibold">{data.user?.name || "User"}</h1>
+			<p class="text-sm text-muted-foreground">{data.user?.email || "-"}</p>
+		</div>
+
+		<form method="POST" action="?/request_loan" use:enhance class="border rounded-md p-4 space-y-4 bg-muted/20">
+			<h2 class="text-base font-semibold">Ajukan Peminjaman Arsip</h2>
+
+			{#if form?.error}
+				<div class="p-3 text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-md">
+					{form.error}
+				</div>
+			{/if}
+
+			<div class="grid gap-4 md:grid-cols-2">
+				<div class="space-y-1.5">
+					<Label for="loan-purpose">Keperluan Peminjaman</Label>
+					<Input id="loan-purpose" name="purpose" required placeholder="Contoh: Penelitian Skripsi" />
+				</div>
+				<div class="space-y-1.5">
+					<Label for="loan-duration">Batas Tanggal Pinjam</Label>
+					<Input id="loan-duration" name="duration" type="date" required />
+				</div>
+			</div>
+
+			<div class="space-y-1.5">
+				<Label for="loan-title">Judul / Daftar Arsip yang Dipinjam</Label>
+				<Input id="loan-title" name="title" value={data.pinjam} required placeholder="Contoh: Foto Bandung 1990" />
+			</div>
+
+			<Button type="submit" size="sm">Kirim Permohonan</Button>
+		</form>
+
 		<div class="space-y-3">                                                                                     
 			<h2 class="text-base font-semibold">Status Peminjaman Saya</h2>                                             
 			<div class="border rounded-md overflow-x-auto">                                                             

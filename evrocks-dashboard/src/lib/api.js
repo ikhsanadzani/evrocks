@@ -176,6 +176,15 @@ export const api_service = {
                 return { items: res.data, total: Number(res.headers['x-wp-total'] || res.data.length) };
             }, { items: [], total: 0 }),
 
+        create: ({ user_id, purpose, duration, title }) => {
+            if (!purpose || !duration || !title) {
+                return { error: 'Keperluan, tanggal selesai, dan judul arsip wajib diisi.' };
+            }
+            return run(async () => {
+                await wpApi.post('/evrocks/v1/lender', { user_id, purpose, duration, title });
+            });
+        },
+
         update_status: (id, { status, reason = '' }) => {
             if (!id || !status) return { error: 'ID dan status wajib diisi.' };
             return run(async () => {
