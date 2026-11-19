@@ -21,5 +21,11 @@ export async function handle({event, resolve}) {
     if (event.locals.user && is_login && event.reques.method === 'GET' ) redirect(303, '/');
 
     const role = event.locals.user?.role;
-    if (pathname.startsWith('/user'))
+    if (pathname.startsWith('/user') && role !== 'administrator') {
+        error(403, 'Akses ditolak. Halaman ini khusus administrator')
+    }
+    if (staff_routes.some((prefix) => pathname.startsWith(prefix)) && role !== 'administrator' && role !== 'editor'){
+        error(403, 'tolak');
+    }
+    return resolve(event);
 }
