@@ -4,7 +4,6 @@
     import { Badge } from '#lib/components/ui/badge/index.js';
     import { Button } from '#lib/components/ui/button/index.ts';
     import { Input } from '#lib/components/ui/input/index.ts';
-
     let {data} = $props();
     // const strip_html = (html) => (html ?? '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
     // 1. (html ?? '') → Pengaman kalau html kosong (null/undefined), ganti jadi string kosong ''.
@@ -38,7 +37,9 @@
     <div class="grid grid-cols-1 md:grid-cols2 lg:grid-cols3 gap-6">
         {#each data.archives as item (item.id) }
             <a href="/explore/archive/{item.id}" class="group block">
-                
+                <Card.Root>
+                    
+                </Card.Root>
             </a>
         {/each}
     </div>
