@@ -2,7 +2,7 @@
 import { api_service } from "#lib/api.js";
 import { error } from "@sveltejs/kit";
 
-export async function load() {
+export async function load({url}) {
 
     const q = url.searchParams.get('q')?.trim().toLowerCase()?? ''; 
     const res = await api_service.archive.getAll(50);
