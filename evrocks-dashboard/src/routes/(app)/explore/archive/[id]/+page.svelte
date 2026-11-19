@@ -4,6 +4,7 @@
     import { Badge } from '#lib/components/ui/badge/index.js';
     import { Button } from '#lib/components/ui/button/index.ts';
     import { Input } from '#lib/components/ui/input/index.ts';
+    import { TAXONOMIES } from '#lib/taxonomies.js';
 
     let { data } = $props();
     let archive = $derived(data.archive);
@@ -11,12 +12,12 @@
     let taxonomies = $derived(archive.taxonomies ?? {});
 
     const meta_fields = [
-        ['Reference Code', 'code'],
-        ['Archival Year', 'archive_year'],
-        ['Archival Year', 'access_status'],
-        ['Physical Condition', 'physical_condition'],
-        ['Processing Unit', 'processing_unit'],
-        ['Volume / Number', 'volume']
+        ['Reference Code:', 'code'],
+        ['Archival Year:', 'archive_year'],
+        ['Archival Year:', 'access_status'],
+        ['Physical Condition:', 'physical_condition'],
+        ['Processing Unit:', 'processing_unit'],
+        ['Volume / Number:', 'volume']
     ]
 </script>
 
@@ -51,6 +52,40 @@
             <Card.Header class="border-b pb-3">
                 <Card.Title class="text-base">Archive Information</Card.Title>
             </Card.Header>
+            <Card.Content class="pt-4 space-y-3 text-sm">
+                {#each meta_fields as [label, key] (key)}
+                    <div class="flex justify-between gap-4 border-b pb-2 last:border-b-0 last:pb-0">     
+                        <span class="text-muted-foreground">{label}</span>
+                        <span class="font-medium text-right">{meta[key] || '-'}</span>
+                    </div>
+    			{/each}
+            </Card.Content>
         </Card.Root>
+
+        <Card.Root>
+            <Card.Header class="border-b pb-3">
+                <Card.Title class="text-base">Classification & Taxonomy</Card.Title>
+            </Card.Header>
+            
+            <Card.Content>
+                {#each TAXONOMIES.archive as tax (tax.key)}
+                    {@const terms = taxonomies[tax.key] ?? []} 
+                    {#if terms.length > 0} 
+  			            <div class="space-y-1">
+  				            <div class="text-xs text-muted-foreground">{tax.label}</div>
+                            <div class="flex flex-wrap gap-1.5"> 
+                                    {#each terms as term (term.id)}
+                                        <Badge variant="secondary">{term.name}</Badge>
+                                    {/each}
+                                    </div>
+  		                        </div>
+                            {/if} 
+                        {/each}
+            </Card.Content>
+        </Card.Root>
+
+        <Button href="/?pinjam={encodeURIComponent(archive.raw_title || archive.title)}" class="w-full">
+                    Ajukan Peminjaman Arsip Ini                                                                  
+        </Button>
     </div>
 </div>
