@@ -18,7 +18,13 @@ export const TAXONOMIES = {
     exhibition: [{ key: 'exhibition_theme', label: 'Exhibition Themes', hierarchical: true }]
 };
 
-// Whitelist: kembalikan null kalau tab/key tidak dikenal (mencegah request ke endpoint sembarangan)
+// Mencari 1 taxonomy berdasarkan tab ('archive'/'exhibition') dan key-nya.
+// Jika tidak ada di daftar, kembalikan null (mencegah user menembak endpoint sembarangan).
 export function get_taxonomy(tab, key) {
     return TAXONOMIES[tab]?.find((t) => t.key === key) ?? null;
 }
+
+// cara mengedit? 
+// Kalau di WordPress ditambah taxonomy baru, cukup tambahkan
+// `{ key: 'slug-wp', label: 'Nama UI', hierarchical: false }` 
+// ke array `archive` atau `exhibition`.
