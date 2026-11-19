@@ -8,7 +8,10 @@
 	let { children }: LayoutProps = $props();
 </script>
 
-<ModeWatcher />
+<button>
+	
+</button>
+
 <svelte:head>
 	<link rel="icon" href={logo} />
 </svelte:head>

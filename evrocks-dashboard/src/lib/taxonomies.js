@@ -4,6 +4,9 @@
 // jadi endpoint REST-nya sama dengan key: /wp/v2/{key}
 export const TAXONOMIES = {
     archive: [
+         // key = slug endpoint di WP (/wp/v2/archive-classification)
+        // label = tulisan di tombol/judul UI
+        // hierarchical = true jika punya Parent/Induk (seperti Kategori), false jika datar (seperti Tag)
         { key: 'archive-classification', label: 'Classification', hierarchical: true },
         { key: 'archive-creator', label: 'Creators', hierarchical: false },
         { key: 'exhibition_theme', label: 'Exhibition Themes', hierarchical: true },

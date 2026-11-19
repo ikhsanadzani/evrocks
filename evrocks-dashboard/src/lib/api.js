@@ -2,8 +2,10 @@
 import axios from 'axios';
 import { TAXONOMIES } from '#lib/taxonomies.js';
 
+// Baca file .env supaya process.env.WP_API_URL, WP_USER, WP_APP_PASSWORD terbaca
 try { process.loadEnvFile(); } catch {}
 
+// Buat koneksi axios ke WordPress dengan Basic Auth (Application Password)
 export const wpApi = axios.create({
     baseURL: process.env.WP_API_URL || 'http://192.168.122.204/wp-json',
     timeout: 15000,
@@ -11,6 +13,9 @@ export const wpApi = axios.create({
 });
 
 
+// Pembungkus try/catch agar kita tidak perlu menulis try/catch berulang-ulang di tiap fungsi.
+// - Kalau fn() sukses: kembalikan { error: null, ...hasilnya }
+// - Kalau fn() gagal: tangkap pesan error dari WordPress, kembalikan { ...fallback, error: pesan }
 async function run(fn, fallback = {}) {
     try {
         return { error: null, ...(await fn()) };
@@ -19,12 +24,15 @@ async function run(fn, fallback = {}) {
     }
 }
 
+// Membaca data taxonomy yang menempel pada post (dari parameter ?_embed=true).
+// WordPress mengirim _embedded['wp:term'] dalam bentuk array 2 lapis: [ [term1, term2], [term3] ]
 const parse_wp_terms = (item) => {
     const groups = item._embedded?.['wp:term'] ?? [];
     const by_tax = {};
     for (const group of groups) {
         for (const term of group ?? []) {
             if (!term?.taxonomy) continue;
+            // Kelompokkan berdasarkan nama taxonomy-nya, misal by_tax['archive-creator'] = [...]
             (by_tax[term.taxonomy] ??= []).push({
                 id: term.id,
                 name: term.name,
@@ -35,6 +43,7 @@ const parse_wp_terms = (item) => {
     return by_tax;
 };
 
+// Merapikan JSON mentah post WordPress menjadi object yang bersih untuk UI Svelte
 export const parse_wp_post = (item, attachments = []) => ({
     id: item.id,
     slug: item.slug,
@@ -65,7 +74,8 @@ async function upload_media(file) {
 }
 
 const create_cpt_service = (endpoint) => ({
-    getAll: (per_page = 50) =>
+    getAll: (per_page = 50) => // jika ingin diubah untuk data perhalaman disini
+        // `getAll(per_page)`: `GET /wp/v2/${endpoint}?per_page=50&status=any&_embed=true` → mengambil daftar item beserta totalnya dari header `x-wp-total`.
         run(async () => {
             const res = await wpApi.get(`/wp/v2/${endpoint}`, {
                 params: { per_page, status: 'any', _embed: true }
@@ -75,6 +85,7 @@ const create_cpt_service = (endpoint) => ({
         }, { items: [], total: 0 }),
 
     get_by_id: (id) =>
+        // `get_by_id(id)`: mengambil detail 1 item (`context=edit&_embed=true`) sekaligus file media lampirannya (`/wp/v2/media?parent=${id}`).
         run(async () => {
             const [res, media_res] = await Promise.all([
                 wpApi.get(`/wp/v2/${endpoint}/${id}`, {
@@ -96,6 +107,9 @@ const create_cpt_service = (endpoint) => ({
         }, { item: null }),
 
     async update_from_form(id, form_data) {
+        // **`update_from_form(id, form_data)`**:
+        // 1. Upload file gambar/dokumen baru jika user memilih file (`upload_media`).
+        
         const title = form_data.get('title')?.toString().trim();
         if (!id || !title) return { error: 'ID dan judul wajib diisi.' };
 
@@ -110,6 +124,7 @@ const create_cpt_service = (endpoint) => ({
         const metabox = {};
         for (const [key, val] of form_data.entries()) {
             if (key.startsWith('meta_')) {
+                //Mengumpulkan semua input yang namanya diawali `meta_` (contoh `meta_nomor_arsip`) ke dalam object `metabox`.
                 const meta_key = key.slice(5);
                 if (key.endsWith('[]')) {
                     const clean_key = meta_key.slice(0, -2);
@@ -124,6 +139,7 @@ const create_cpt_service = (endpoint) => ({
         for (const tax of TAXONOMIES[endpoint] ?? []) {
             tax_payload[tax.key] = form_data
                 .getAll(`tax_${tax.key}`)
+                //Mengumpulkan semua checkbox taxonomy yang diawali `tax_` (contoh `tax_archive-creator`) menjadi array ID angka (`[3, 7]`).
                 .map((v) => Number(v))
                 .filter((n) => Number.isFinite(n) && n > 0);
         }
@@ -136,6 +152,7 @@ const create_cpt_service = (endpoint) => ({
 
         return run(async () => {
             await wpApi.post(`/wp/v2/${endpoint}/${id}`, payload);
+            //Membungkus semuanya ke dalam `payload` (paket data) lalu mengirim `POST /wp/v2/${endpoint}/${id}`.
         });
     }
 });
@@ -153,7 +170,7 @@ export const api_service = {
     archive: create_cpt_service('archive'),
     exhibition: create_cpt_service('exhibition'),
     lender: {
-        getAll: (per_page = 50) =>
+        getAll: (per_page = 50) => // jika ingin diubah untuk data perhalaman disini
             run(async () => {
                 const res = await wpApi.get('/evrocks/v1/lender', { params: { per_page } });
                 return { items: res.data, total: Number(res.headers['x-wp-total'] || res.data.length) };
@@ -223,7 +240,9 @@ export async function login(username, password) {
 
     try {
         const baseURL = wpApi.defaults.baseURL;
+                // 1. Kirim username & password ke plugin JWT Tmeister untuk minta token
         const { data } = await axios.post(`${baseURL}/jwt-auth/v1/token`, {username, password});
+                // 2. Pakai token tersebut sebagai tiket (Bearer) untuk menanyakan detail & role user yang login
         const me = await axios.get(`${baseURL}/wp/v2/users/me?context=edit`, {headers: {Authorization: `Bearer ${data.token}`}});
 
         return{
@@ -233,6 +252,7 @@ export async function login(username, password) {
                 name: me.data.name,
                 email: me.data.email ?? '',
                 role: me.data.roles?.[0] ?? 'subscriber'
+                // Ambil role pertama; jika kosong anggap 'subscriber'
             },
             error: null
         

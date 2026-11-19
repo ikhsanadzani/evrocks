@@ -2,7 +2,9 @@
     import { redirect } from '@sveltejs/kit';
   
     export async function handle({ event, resolve }) {
+        // 1. Satpam meriksa saku browser: "Ada kartu login (cookie 'evrocks_session') nggak?"
         const raw = event.cookies.get('evrocks_session');
+        // 2. Kalau ada kartu login-nya:  
         if (raw) {
             try {
                 event.locals.user = JSON.parse(raw).user ?? null;
