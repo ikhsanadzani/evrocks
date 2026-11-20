@@ -75,7 +75,18 @@
 							<tr>                                                                                                        
 								<td class="p-3 font-mono text-xs">#{item.id}</td>                                                           
 								<td class="p-3 font-medium">{item.purpose}</td>                                                             
-								<td class="p-3 text-muted-foreground whitespace-pre-line">{item.title}</td>                                 
+								<td class="p-3 text-muted-foreground whitespace-pre-line">
+									<div>{item.title}</div>
+									{#if item.status === "approve" && item.loan?.length}
+										<div class="mt-1 flex flex-wrap gap-1">
+											{#each item.loan as arc (arc.archive_id)}
+												<a href="/explore/archive/{arc.archive_id}" class="text-xs text-primary underline">
+													{arc.title}
+												</a>
+											{/each}
+										</div>
+									{/if}
+								</td>                                 
 								<td class="p-3 text-xs text-muted-foreground">{item.duration}</td>                                          
 								<td class="p-3"><span class="badge-status                                                                   
 								uppercase">{item.status}</span></td>                                                                        

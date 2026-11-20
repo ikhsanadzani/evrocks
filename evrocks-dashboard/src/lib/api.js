@@ -185,10 +185,10 @@ export const api_service = {
             });
         },
 
-        update_status: (id, { status, reason = '' }) => {
+        update_status: (id, { status, reason = '', archive_ids = [] }) => {
             if (!id || !status) return { error: 'ID dan status wajib diisi.' };
             return run(async () => {
-                await wpApi.post(`/evrocks/v1/lender/${id}`, { status, reason });
+                await wpApi.post(`/evrocks/v1/lender/${id}`, { status, reason, archive_ids });
             });
         }
     },

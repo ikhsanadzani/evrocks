@@ -47,9 +47,28 @@
                         <td class="p-3">
                             <span class="badge-status uppercase">{item.status}</span>
                         </td>
-                        <td class="p-3 min-w-64">
+                        <td class="p-3 min-w-72">
                             <form method="POST" action="?/update_lender" use:enhance class="space-y-2">
                                 <input type="hidden" name="id" value={item.id} />
+                                <!-- ponytail: native checkbox list instead of custom async search widget -->
+                                <details class="border rounded-md px-2 py-1.5 text-xs bg-background">
+                                    <summary class="cursor-pointer font-medium">
+                                        Pilih Arsip ({item.loan?.length ?? 0} dipilih)
+                                    </summary>
+                                    <div class="mt-2 max-h-32 overflow-y-auto space-y-1">
+                                        {#each data.archives ?? [] as arc (arc.id)}
+                                            <label class="flex items-center gap-2 cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    name="archive_ids"
+                                                    value={arc.id}
+                                                    checked={(item.loan ?? []).some((l) => Number(l.archive_id) === Number(arc.id))}
+                                                />
+                                                <span class="truncate">{@html arc.title}</span>
+                                            </label>
+                                        {/each}
+                                    </div>
+                                </details>
                                 <Input
                                     name="reason"
                                     value={item.reason === '-' ? '' : item.reason}
