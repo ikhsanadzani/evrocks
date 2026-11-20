@@ -6,8 +6,20 @@
     import { Label } from '#lib/components/ui/label/index.ts';
 
     // tab: 'archive' | 'exhibition'
-    let { tab, taxonomy_list = [], active_taxonomy, terms = [], terms_error = null, form } = $props();
+    let {
+        tab,
+        taxonomy_list = [],
+        active_taxonomy,
+        terms = [],
+        total = 0,
+        total_pages = 1,
+        page = 1,
+        terms_error = null,
+        form
+    } = $props();
 
+    // ponytail: inline edit via single editing_id state; no modal component needed
+    let editing_id = $state(null);
     const term_name = (id) => terms.find((t) => t.id === id)?.name ?? '-';
 </script>
 
@@ -106,31 +118,71 @@
                 </thead>
                 <tbody class="divide-y">
                     {#each terms as term (term.id)}
-                        <tr class="hover:bg-muted/50">
-                            <td class="p-3 font-mono text-xs">#{term.id}</td>
-                            <td class="p-3 font-medium">{term.name}</td>
-                            <td class="p-3 text-muted-foreground">{term.slug}</td>
-                            {#if active_taxonomy.hierarchical}
-                                <td class="p-3 text-muted-foreground">
-                                    {term.parent ? term_name(term.parent) : '-'}
+                        {#if editing_id === term.id}
+                            <tr class="bg-muted/30">
+                                <td class="p-3 font-mono text-xs">#{term.id}</td>
+                                <td colspan={active_taxonomy.hierarchical ? 4 : 3} class="p-3">
+                                    <form
+                                        method="POST"
+                                        action="?/update_term"
+                                        use:enhance={() => async ({ update }) => {
+                                            await update();
+                                            editing_id = null;
+                                        }}
+                                        class="flex flex-wrap items-center gap-2"
+                                    >
+                                        <input type="hidden" name="tax" value={active_taxonomy.key} />
+                                        <input type="hidden" name="id" value={term.id} />
+                                        <Input name="name" value={term.name} required class="h-8 w-44 text-sm" />
+                                        <Input name="slug" value={term.slug} placeholder="Slug" class="h-8 w-36 text-sm" />
+                                        {#if active_taxonomy.hierarchical}
+                                            <select name="parent" value={term.parent} class="h-8 rounded-md border bg-background px-2 text-xs">
+                                                <option value="0">— Tidak ada —</option>
+                                                {#each terms.filter((t) => t.id !== term.id) as t (t.id)}
+                                                    <option value={t.id}>{t.name}</option>
+                                                {/each}
+                                            </select>
+                                        {/if}
+                                        <Button type="submit" size="sm" class="h-8 text-xs">Simpan</Button>
+                                        <Button type="button" variant="ghost" size="sm" class="h-8 text-xs" onclick={() => (editing_id = null)}>
+                                            Batal
+                                        </Button>
+                                    </form>
                                 </td>
-                            {/if}
-                            <td class="p-3">{term.count}</td>
-                            <td class="p-3 text-right">
-                                <form
-                                    method="POST"
-                                    action="?/delete_term"
-                                    use:enhance={({ cancel }) => {
-                                        if (!confirm(`Hapus term "${term.name}"?`)) cancel();
-                                    }}
-                                >
-                                    <input type="hidden" name="tab" value={tab} />
-                                    <input type="hidden" name="tax" value={active_taxonomy.key} />
-                                    <input type="hidden" name="id" value={term.id} />
-                                    <Button type="submit" variant="outline" size="sm">Delete</Button>
-                                </form>
-                            </td>
-                        </tr>
+                                <td></td>
+                            </tr>
+                        {:else}
+                            <tr class="hover:bg-muted/50">
+                                <td class="p-3 font-mono text-xs">#{term.id}</td>
+                                <td class="p-3 font-medium">{term.name}</td>
+                                <td class="p-3 text-muted-foreground">{term.slug}</td>
+                                {#if active_taxonomy.hierarchical}
+                                    <td class="p-3 text-muted-foreground">
+                                        {term.parent ? term_name(term.parent) : '-'}
+                                    </td>
+                                {/if}
+                                <td class="p-3">{term.count}</td>
+                                <td class="p-3 text-right">
+                                    <div class="inline-flex items-center gap-1.5">
+                                        <Button type="button" variant="ghost" size="sm" onclick={() => (editing_id = term.id)}>
+                                            Edit
+                                        </Button>
+                                        <form
+                                            method="POST"
+                                            action="?/delete_term"
+                                            use:enhance={({ cancel }) => {
+                                                if (!confirm(`Hapus term "${term.name}"?`)) cancel();
+                                            }}
+                                        >
+                                            <input type="hidden" name="tab" value={tab} />
+                                            <input type="hidden" name="tax" value={active_taxonomy.key} />
+                                            <input type="hidden" name="id" value={term.id} />
+                                            <Button type="submit" variant="outline" size="sm">Delete</Button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        {/if}
                     {:else}
                         <tr>
                             <td colspan="6" class="p-6 text-center text-muted-foreground">
@@ -141,5 +193,29 @@
                 </tbody>
             </table>
         </div>
+
+        {#if total_pages > 1}
+            <div class="flex items-center justify-between text-sm text-muted-foreground">
+                <span>Halaman {page} dari {total_pages} (Total {total} term)</span>
+                <div class="flex items-center gap-2">
+                    <Button
+                        href="/{tab}/taxonomy?tax={active_taxonomy.key}&page={page - 1}"
+                        variant="outline"
+                        size="sm"
+                        disabled={page <= 1}
+                    >
+                        Prev
+                    </Button>
+                    <Button
+                        href="/{tab}/taxonomy?tax={active_taxonomy.key}&page={page + 1}"
+                        variant="outline"
+                        size="sm"
+                        disabled={page >= total_pages}
+                    >
+                        Next
+                    </Button>
+                </div>
+            </div>
+        {/if}
     {/if}
 </div>
