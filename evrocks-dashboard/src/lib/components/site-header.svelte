@@ -1,7 +1,21 @@
 <script lang="ts">
+	import { page } from "$app/state";
 	import * as Sidebar from "#lib/components/ui/sidebar/index.js";
 	import { Button } from "#lib/components/ui/button/index.js";
 	import { Separator } from "#lib/components/ui/separator/index.js";
+
+	const PAGE_TITLES: [string, string][] = [
+		["/archive", "Archives"],
+		["/exhibition", "Virtual Exhibitions"],
+		["/lender", "Archive Loans"],
+		["/users", "User Management"],
+		["/explore/archive", "Catalog Archives"],
+		["/explore/exhibition", "Catalog Exhibitions"],
+	];
+
+	let title = $derived(
+		PAGE_TITLES.find(([prefix]) => page.url.pathname.startsWith(prefix))?.[1] ?? "Dashboard"
+	);
 </script>
 
 <header
@@ -10,7 +24,7 @@
 	<div class="flex w-full items-center gap-1 px-4 lg:gap-2 lg:px-6">
 		<Sidebar.Trigger class="-ms-1" />
 		<Separator orientation="vertical" class="mx-2 data-vertical:h-4 data-vertical:self-auto" />
-		<h1 class="text-base font-medium">Documents</h1>
+		<h1 class="text-base font-medium">{title}</h1>
 		<div class="ms-auto flex items-center gap-2">
 			<Button
 				href="https://github.com/radova-pack/evrocks"
