@@ -1,5 +1,6 @@
 import { fail, redirect } from "@sveltejs/kit";
-import  { login } from "#lib/api.js";
+import { login } from "#lib/api.js";
+import { sign_session } from "#lib/server/session.js";
 
 export const actions = {
     // Dipanggil oleh <form method="POST" action="?/login">
@@ -15,8 +16,8 @@ export const actions = {
         // Jika gagal login, kirim status 401 dan pesan error ke variabel `form` di +page.svelte
         if (error || !token || !user) return fail(401, { error: error || 'login failed' }); 
 
-        // Simpan cookie session (SvelteKit otomatis memberi httpOnly: true & sameSite: 'lax')
-        cookies.set('evrocks_session', JSON.stringify({ token, user }), {
+        // Simpan cookie session bertanda tangan HMAC-SHA256 (SvelteKit otomatis memberi httpOnly: true & sameSite: 'lax')
+        cookies.set('evrocks_session', sign_session({ token, user }), {
             path:'/',
             maxAge: 60 * 60 * 24 * 7 // 7 hari
         });
