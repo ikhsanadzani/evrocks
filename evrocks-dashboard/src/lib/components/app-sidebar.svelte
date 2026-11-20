@@ -92,7 +92,7 @@
     let display_user = $derived({
         name: session_user?.name || "Guest",                                                                                                                         
         email: `${ROLE_LABELS[role] ?? role}${session_user?.email ? ` · ${session_user.email}` : ""}`,
-        avatar: "/avatars/shadcn.jpg",
+        avatar: "",
     });
 
 	let { ...restProps }: ComponentProps<typeof Sidebar.Root> = $props();
