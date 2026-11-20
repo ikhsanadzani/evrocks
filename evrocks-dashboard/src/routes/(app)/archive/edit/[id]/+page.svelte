@@ -21,7 +21,7 @@
             <h1 class="text-xl font-semibold">Edit Archive #{archive.id}</h1>
             <p class="text-xs text-muted-foreground">Slug: {archive.slug}</p>
         </div>
-        <Button href="/?tab=archive" variant="outline" size="sm">Back</Button>
+        <Button href="/archive" variant="outline" size="sm">Back</Button>
     </div>
 
     {#if form?.error}
@@ -222,7 +222,7 @@
 
         <div class="flex items-center gap-2 pt-2">
             <Button type="submit">Simpan Perubahan</Button>
-            <Button href="/?tab=archive" variant="outline">Batal</Button>
+            <Button href="/archive" variant="outline">Batal</Button>
         </div>
     </form>
 </div>

@@ -35,7 +35,7 @@
                         </div>
 
                         <Card.Title class="text-base leading-snug">
-                            <a href="/?tab=exhibition&view=detail&id={item.id}" class="hover:underline">
+                            <a href="/exhibition/detail/{item.id}" class="hover:underline">
                                 {@html item.title}
                             </a>
                         </Card.Title>

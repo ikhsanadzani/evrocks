@@ -39,8 +39,8 @@
             </p>
         </div>
         <div class="flex items-center gap-2 shrink-0">
-            <Button href="/?tab=exhibition&view=edit&id={exhibition.id}" size="sm">Edit</Button>
-            <Button href="/?tab=exhibition" variant="outline" size="sm">Back</Button>
+            <Button href="/exhibition/edit/{exhibition.id}" size="sm">Edit</Button>
+            <Button href="/exhibition" variant="outline" size="sm">Back</Button>
         </div>
     </div>
 
