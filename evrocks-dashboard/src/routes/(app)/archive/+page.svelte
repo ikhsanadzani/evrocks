@@ -25,7 +25,7 @@
                         <span>{new Date(item.date).toLocaleDateString('id-ID')}</span>
                     </div>
                     <Card.Title class="text-base leading-snug">
-                        <a href="/?tab=archive&view=detail&id={item.id}" class="hover:underline">
+                        <a href="/archive/detail/{item.id}" class="hover:underline">
                             {@html item.title}
                         </a>
                     </Card.Title>
