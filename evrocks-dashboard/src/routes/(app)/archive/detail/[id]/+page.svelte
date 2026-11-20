@@ -56,7 +56,7 @@
             </p>
         </div>
         <div class="flex items-center gap-2 shrink-0">
-            <Button href="/archive/edit/{item.id}" size="sm">Edit</Button>
+            <Button href="/archive/edit/{archive.id}" size="sm">Edit</Button>
             <Button href="/archive" variant="outline" size="sm">Back</Button>
         </div>
     </div>
