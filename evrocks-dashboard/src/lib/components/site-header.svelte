@@ -13,14 +13,14 @@
 		<h1 class="text-base font-medium">Documents</h1>
 		<div class="ms-auto flex items-center gap-2">
 			<Button
-				href="https://github.com/shadcn-ui/ui/tree/main/apps/v4/app/(examples)/dashboard"
+				href="https://github.com/radova-pack/evrocks"
 				variant="ghost"
 				size="sm"
 				class="hidden sm:flex dark:text-foreground"
 				target="_blank"
 				rel="noopener noreferrer"
 			>
-				GitHub
+				Contribute
 			</Button>
 		</div>
 	</div>

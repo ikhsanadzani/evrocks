@@ -30,10 +30,11 @@ export const actions = {
         const { error } = await api_service.taxonomy.create(tax, {
             name: form_data.get('name')?.toString().trim(),
             slug: form_data.get('slug')?.toString().trim(),
-            parent: taxonomy.hierarchical ? Number(form_data.get('parent')) || 0 : 0
+            parent: taxonomy.hierarchical ? Number(form_data.get('parent')) || 0 : 0,
+            description: form_data.get('description')?.toString().trim()
         });
         if (error) return fail(400, { taxonomy_error: error });
-        throw redirect(303, '/${TAB}/taxonomy?tax=${tax}');
+        throw redirect(303, `/${TAB}/taxonomy?tax=${tax}`);
     },
     delete_term:async ({ request }) => {
             const form_data = await request.formData();

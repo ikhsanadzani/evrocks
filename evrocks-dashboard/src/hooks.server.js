@@ -1,8 +1,16 @@
 // @ts-nocheck
 
 import { error, redirect } from '@sveltejs/kit';
+import crypto from 'node:crypto';
+import { SESSION_SECRET } from '$env/static/private';
 
 const staff_routes = [ '/archive', '/exhibition', '/lender' ]
+
+export function sign_session(payload){
+    const data = Buffer.from(JSON.stringify(payload)).toString('base64url');
+    const sig = crypto.createHmac('sha256', SESSION_SECRET).update(data).digest('base64url');
+    return `${data}.${sig}`;
+}
 
 export async function handle({event, resolve}) {
     const raw = event.cookies.get('evrocks_session');

@@ -21,7 +21,7 @@ export async function load ({params}) {
 export const actions = {
     update_archive: async ({ request, params }) => {
         const form_data = await request.formData();
-        const { error: err } = await api_service.archive.get_by_id(params.id, form_data);
+        const { error: err } = await api_service.archive.update_from_form(params.id, form_data);
         if (err) return fail(400, { error: err });
         throw redirect(303, '/archive');
     }
