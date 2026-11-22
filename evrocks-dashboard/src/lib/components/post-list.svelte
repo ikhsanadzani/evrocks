@@ -39,7 +39,7 @@
                     <Card.Header>
                         <div>
                             <span class="font-mono">#{item.id}</span>
-                            <span>{new Date(item.date).toLocaleDates("id-ID")}</span>
+                            <span>{new Date(item.date).toLocaleDateString("id-ID")}</span>
                         </div>
 
                         <Card.Title>

@@ -23,7 +23,6 @@
 
 	// for main nav
 	import * as Sidebar from "#lib/components/ui/sidebar/index.js";
-	import NavDocuments from "./nav-documents.svelte";
 	import NavMain from "./nav-main.svelte";
 	import NavSecondary from "./nav-secondary.svelte";
 	import NavUser from "./nav-user.svelte";
