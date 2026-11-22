@@ -67,6 +67,10 @@
                     </div>
                 </Card.Footer>
             </Card.Root>
+            {:else}
+                <div>
+                    {empty_text}
+                </div>
         {/each}
     </div>
 </div>
