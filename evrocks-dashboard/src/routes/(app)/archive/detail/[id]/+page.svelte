@@ -4,6 +4,7 @@
     import { Badge } from "#lib/components/ui/badge/index.js";
     import { Button } from "#lib/components/ui/button/index.ts";
     import { TAXONOMIES } from "#lib/taxonomies.js";
+    import DetailLayout from "#lib/components/detail-layout.svelte";
 
     let { data } = $props();
     let archive = $derived(data.archive);
@@ -94,51 +95,35 @@
     const is_pdf = (f) => f.mime_type === "application/pdf" || /\.pdf$/i.test(f.url ?? "");
 </script>
 
-<div class="max-w-6xl mx-auto w-full p-6 space-y-6">
-    <!-- Top Header & Quick Actions -->
-    <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4 border-b pb-5">
-        <div class="space-y-2 min-w-0">
-            <div class="flex items-center gap-2 text-xs text-muted-foreground">
-                <a href="/archive" class="hover:underline">All Archives</a>
-                <span>/</span>
-                <span class="font-mono">#{archive.id}</span>
-            </div>
+<DetailLayout back_href="/archive" back_label="All Archives" id={archive.id} title={archive.title}>
+    {#snippet badges()}
+        <Badge variant={archive.status === "publish" ? "default" : "secondary"} class="uppercase text-[11px]">
+            {archive.status}
+        </Badge>
+        {#if meta.code}
+            <Badge variant="outline" class="font-mono text-[11px]">{meta.code}</Badge>
+        {/if}
+        {#if meta.access_status}
+            <Badge variant="outline" class="text-[11px]">
+                {format_val("access_status", meta.access_status)}
+            </Badge>
+        {/if}
+        {#if meta.authenticity}
+            <Badge variant="secondary" class="text-[11px]">
+                {format_val("authenticity", meta.authenticity)}
+            </Badge>
+        {/if}
+    {/snippet}
 
-            <h1 class="text-2xl font-semibold tracking-tight leading-snug">{@html archive.title}</h1>
+    {#snippet actions()}
+        {#if archive.status === "publish"}
+            <Button href="/explore/archive/{archive.id}" variant="ghost" size="sm">Preview Katalog</Button>
+        {/if}
+        <Button href="/archive/edit/{archive.id}" size="sm">Edit Archive</Button>
+        <Button href="/archive" variant="outline" size="sm">Back</Button>
+    {/snippet}
 
-            <div class="flex flex-wrap items-center gap-2 pt-0.5">
-                <Badge variant={archive.status === "publish" ? "default" : "secondary"} class="uppercase text-[11px]">
-                    {archive.status}
-                </Badge>
-                {#if meta.code}
-                    <Badge variant="outline" class="font-mono text-[11px]">{meta.code}</Badge>
-                {/if}
-                {#if meta.access_status}
-                    <Badge variant="outline" class="text-[11px]">
-                        {format_val("access_status", meta.access_status)}
-                    </Badge>
-                {/if}
-                {#if meta.authenticity}
-                    <Badge variant="secondary" class="text-[11px]">
-                        {format_val("authenticity", meta.authenticity)}
-                    </Badge>
-                {/if}
-            </div>
-        </div>
-
-        <div class="flex items-center gap-2 shrink-0">
-            {#if archive.status === "publish"}
-                <Button href="/explore/archive/{archive.id}" variant="ghost" size="sm">Preview Katalog</Button>
-            {/if}
-            <Button href="/archive/edit/{archive.id}" size="sm">Edit Archive</Button>
-            <Button href="/archive" variant="outline" size="sm">Back</Button>
-        </div>
-    </div>
-
-    <!-- Main 2-Column Layout -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-        <!-- Left Column (2/3): Media Preview, Description, Grouped Specifications -->
-        <div class="lg:col-span-2 space-y-6">
+    {#snippet main()}
             <Card.Root>
                 <Card.Header class="border-b pb-3">
                     <Card.Title class="text-base">Digital Archive File</Card.Title>
@@ -228,10 +213,9 @@
                     </Card.Content>
                 </Card.Root>
             {/each}
-        </div>
+    {/snippet}
 
-        <!-- Right Column (1/3, sticky): Quick Info & Taxonomies -->
-        <div class="space-y-6 lg:sticky lg:top-6">
+    {#snippet aside()}
             <Card.Root>
                 <Card.Header class="border-b pb-3">
                     <Card.Title class="text-base">Ringkasan Rekod</Card.Title>
@@ -277,6 +261,5 @@
                     {/each}
                 </Card.Content>
             </Card.Root>
-        </div>
-    </div>
-</div>
+    {/snippet}
+</DetailLayout>

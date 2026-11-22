@@ -33,6 +33,7 @@
 		"cn": "^0.5.2",
 		"d3-scale": "^4.0.3",
 		"d3-shape": "^3.2.1",
+		"daisyui": "^5.8.1",
 		"layerchart": "^2.10.0",
 		"phosphor-svelte": "^3.1.1",
 		"shadcn-svelte": "^1.8.0",

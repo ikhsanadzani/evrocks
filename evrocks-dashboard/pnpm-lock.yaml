@@ -66,6 +66,9 @@ importers:
       d3-shape:
         specifier: ^3.2.1
         version: 3.2.1
+      daisyui:
+        specifier: ^5.8.1
+        version: 5.8.1
       layerchart:
         specifier: ^2.10.0
         version: 2.10.0(svelte@5.57.3)
@@ -656,6 +659,9 @@ packages:
   d3-tricontour@1.1.0:
     resolution: {integrity: sha512-G7gHKj89n2owmkGb6WX6ixcnQ0Kf/0wpa9VIh9DGdbHu8wdrlaHU4ir3/bFNERl8N8nn4G7e7qbtBG8N9caihQ==}
     engines: {node: '>=12'}
+
+  daisyui@5.8.1:
+    resolution: {integrity: sha512-ptP4WHOJ6WltNnA5zwkg3GypOLhsyUM2FHuXCckWVEpWviioInFKsjnShCWYGYHsQ5P9bUCOH1tn45cKLeTUpg==}
 
   debug@4.4.3:
     resolution: {integrity: sha512-RGwwWnwQvkVfavKVt22FGLw+xYSdzARwm0ru6DhTVA3umU5hZc28V3kO4stgYryrTlLpuvgI9GiijltAjNbcqA==}
@@ -1659,6 +1665,8 @@ snapshots:
     dependencies:
       d3-delaunay: 6.0.6
       d3-scale: 4.0.3
+
+  daisyui@5.8.1: {}
 
   debug@4.4.3:
     dependencies:

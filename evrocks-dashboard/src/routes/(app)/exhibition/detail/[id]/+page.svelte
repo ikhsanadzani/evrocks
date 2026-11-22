@@ -4,6 +4,7 @@
     import { Badge } from "#lib/components/ui/badge/index.js";
     import { Button } from "#lib/components/ui/button/index.ts";
     import { TAXONOMIES } from "#lib/taxonomies.js";
+    import DetailLayout from "#lib/components/detail-layout.svelte";
 
     let { data } = $props();
     let exhibition = $derived(data.exhibition);
@@ -27,41 +28,25 @@
     const is_pdf = (f) => f.mime_type === "application/pdf" || /\.pdf$/i.test(f.url ?? "");
 </script>
 
-<div class="max-w-6xl mx-auto w-full p-6 space-y-6">
-    <!-- Top Header & Quick Actions -->
-    <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4 border-b pb-5">
-        <div class="space-y-2 min-w-0">
-            <div class="flex items-center gap-2 text-xs text-muted-foreground">
-                <a href="/exhibition" class="hover:underline">All Exhibitions</a>
-                <span>/</span>
-                <span class="font-mono">#{exhibition.id}</span>
-            </div>
+<DetailLayout back_href="/exhibition" back_label="All Exhibitions" id={exhibition.id} title={exhibition.title}>
+    {#snippet badges()}
+        <Badge variant={exhibition.status === "publish" ? "default" : "secondary"} class="uppercase text-[11px]">
+            {exhibition.status}
+        </Badge>
+        {#if meta._kurator_pameran}
+            <Badge variant="outline" class="text-[11px]">Kurator: {meta._kurator_pameran}</Badge>
+        {/if}
+    {/snippet}
 
-            <h1 class="text-2xl font-semibold tracking-tight leading-snug">{@html exhibition.title}</h1>
+    {#snippet actions()}
+        {#if exhibition.status === "publish"}
+            <Button href="/explore/exhibition/{exhibition.id}" variant="ghost" size="sm">Preview Katalog</Button>
+        {/if}
+        <Button href="/exhibition/edit/{exhibition.id}" size="sm">Edit Exhibition</Button>
+        <Button href="/exhibition" variant="outline" size="sm">Back</Button>
+    {/snippet}
 
-            <div class="flex flex-wrap items-center gap-2 pt-0.5">
-                <Badge variant={exhibition.status === "publish" ? "default" : "secondary"} class="uppercase text-[11px]">
-                    {exhibition.status}
-                </Badge>
-                {#if meta._kurator_pameran}
-                    <Badge variant="outline" class="text-[11px]">Kurator: {meta._kurator_pameran}</Badge>
-                {/if}
-            </div>
-        </div>
-
-        <div class="flex items-center gap-2 shrink-0">
-            {#if exhibition.status === "publish"}
-                <Button href="/explore/exhibition/{exhibition.id}" variant="ghost" size="sm">Preview Katalog</Button>
-            {/if}
-            <Button href="/exhibition/edit/{exhibition.id}" size="sm">Edit Exhibition</Button>
-            <Button href="/exhibition" variant="outline" size="sm">Back</Button>
-        </div>
-    </div>
-
-    <!-- Main 2-Column Layout -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-        <!-- Left Column (2/3): Poster/Files & Curatorial Narrative -->
-        <div class="lg:col-span-2 space-y-6">
+    {#snippet main()}
             <Card.Root>
                 <Card.Header class="border-b pb-3">
                     <Card.Title class="text-base">Poster & Katalog Pameran</Card.Title>
@@ -129,10 +114,9 @@
                     </div>
                 </Card.Content>
             </Card.Root>
-        </div>
+    {/snippet}
 
-        <!-- Right Column (1/3, sticky): Curatorial Info, Record Summary & Taxonomies -->
-        <div class="space-y-6 lg:sticky lg:top-6">
+    {#snippet aside()}
             <Card.Root>
                 <Card.Header class="border-b pb-3">
                     <Card.Title class="text-base">Info Kuratorial & Jadwal</Card.Title>
@@ -182,6 +166,5 @@
                     {/each}
                 </Card.Content>
             </Card.Root>
-        </div>
-    </div>
-</div>
+    {/snippet}
+</DetailLayout>
