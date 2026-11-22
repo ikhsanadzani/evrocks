@@ -41,8 +41,31 @@
                             <span class="font-mono">#{item.id}</span>
                             <span>{new Date(item.date).toLocaleDates("id-ID")}</span>
                         </div>
+
+                        <Card.Title>
+                            <a href="{base_url}/detail/{item.id}">{@html item.title}</a>
+                        </Card.Title>
                     </Card.Header>
+
+                    <Card.Content>
+                            <p>
+                                {strip_html(item.content) || "gaada"}
+                            </p>
+                    </Card.Content>
                 </div>
+
+                <Card.Footer>
+                    <span>{item.status}</span>
+                    <div>
+                        <Button href="{base_url}/detail/{item.id}">
+                            View
+                        </Button>
+
+                        <Button hre="{base_url}/edit/{item.id}">
+                            Edit
+                        </Button>
+                    </div>
+                </Card.Footer>
             </Card.Root>
         {/each}
     </div>
