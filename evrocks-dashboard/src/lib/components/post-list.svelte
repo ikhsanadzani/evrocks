@@ -35,6 +35,13 @@
                     {#if show_image && item.featured_image_url}
                         <img src={item.featured_image_url} alt={strip_html(item.title)}>
                     {/if}
+
+                    <Card.Header>
+                        <div>
+                            <span class="font-mono">#{item.id}</span>
+                            <span>{new Date(item.date).toLocaleDates("id-ID")}</span>
+                        </div>
+                    </Card.Header>
                 </div>
             </Card.Root>
         {/each}
